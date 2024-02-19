@@ -1,0 +1,86 @@
+export const PLU_DATA = [
+{
+	id:0,
+	plu:'4011',
+	name:'banana',
+	image:'banana.webp',
+},
+{
+	id:1,
+	plu:'4087',
+	name:'tomato roma',
+	image:'tomato_roma.webp',
+},
+{
+	id:2,
+	plu:'4556',
+	name:'cabbage green',
+	image:'cabbage.webp',
+},
+{
+	id:3,
+	plu:'4943',
+	name:'walnuts',
+	image:'walnuts.webp',
+},
+{
+	id:4,
+	plu:'4091',
+	name:'potato sweet',
+	image:'potato_sweet.webp',
+},
+{
+	id:5,
+	plu:'4083',
+	name:'potato white',
+	image:'potato_white.webp',
+},
+{
+	id:6,
+	plu:'4073',
+	name:'potato red',
+	image:'potato_red.webp',
+},
+{
+	id:7,
+	plu:'4727',
+	name:'potato yellow',
+	image:'potato_yellow.webp',
+},
+{
+	id:8,
+	plu:'4072',
+	name:'potato russet',
+	image:'potato_russet.webp',
+},
+{
+	id:9,
+	plu:'4776',
+	name:'squash spaghetti',
+	image:'squash_spaghetti.webp',
+},
+{
+	id:10,
+	plu:'4759',
+	name:'squash butternut',
+	image:'squash_butternut.webp',
+},
+{
+	id:11,
+	plu:'4758',
+	name:'squash buttercup',
+	image:'squash_buttercup.webp',
+},
+{
+	id:12,
+	plu:'4750',
+	name:'squash acorn',
+	image:'squash_acorn.webp',
+},
+{
+	id:13,
+	plu:'4261',
+	name:'coconuts',
+	image:'coconuts.webp',
+},
+];
