@@ -77,8 +77,10 @@ jobs:
       - name: Build Static HTML with Next.js
         env: 
           NEXT_PUBLIC_BASE_PATH: ${{ vars.WEB_BASE_PATH }}
+          NEXT_PUBLIC_SITE_BASE_URL: ${{ vars.WEB_URL }}
         run: |
           echo "NEXT_PUBLIC_BASE_PATH: $NEXT_PUBLIC_BASE_PATH"
+          echo "NEXT_PUBLIC_SITE_BASE_URL: $NEXT_PUBLIC_SITE_BASE_URL"
           echo ${{ github.workspace }}
           ${{ steps.detect-package-manager.outputs.runner }} run build
           pwd

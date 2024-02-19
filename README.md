@@ -34,15 +34,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The page auto-updates as you edit the file.
 
-build and server static
+
+build and server static:
 ```
 yarn run build
 npx serve@latest out
 ```
 
-## Github Action
-- pass github page base path to environment vaiable `WEB_BASE_PATH` in `production` enviorment settings
-
+## Github Action setting
+- pass github page base path (i.e. `/plu-quiz`) to environment vaiable `WEB_BASE_PATH` in `production` enviorment settings
+- pass github page url (i.e. `https://kayouwu.github.io/plu-quiz`) to environment vaiable `WEB_URL` in `production` enviorment settings
+s
 ## Dependencies
 - [Tailwind CSS](https://tailwindcss.com/) as css style
 - This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load a custom Google Font.
@@ -65,7 +67,7 @@ Src Folder structure
 - /public: Contains all the static assets for application, such as images.
 
 Next.js 
-- [Static](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports)
+- [Static export](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports)
 - [CSS](https://nextjs.org/docs/pages/building-your-application/styling)
 - [Font](https://nextjs.org/docs/app/building-your-application/optimizing/fonts)
 - /app/layout.tsx: root layout - UI you add to the root layout will be shared across all pages in your application. You can use the root layout to modify your <html> and <body> tags, and add metadata.
@@ -74,10 +76,4 @@ Next.js
 - `loading.tsx` is a special Next.js file built on top of Suspense, it allows you to create fallback UI to show as a replacement while page content loads.
 - `error.tsx` file can be used to define a UI boundary for a route segment. It serves as a catch-all for unexpected errors and allows you to display a fallback UI to your users.
 - Links use <a> elements -> There's a full page refresh on each page navigation. In Next.js, <Link> allows you to do [client-side navigation](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#how-routing-and-navigation-works) with JavaScript.
-
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [Images config](https://nextjs.org/docs/app/api-reference/next-config-js/images)

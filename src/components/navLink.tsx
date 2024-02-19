@@ -6,8 +6,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 
 import { NavLink } from "@/entity/navLink";
-import {AUTHOR} from '@/lib/constant';
-import iconPic from '@/ui/image/banner.webp';
+import {AUTHOR, LOGO} from '@/lib/constant';
 
 const links: NavLink[] = [
   { key: "quiz", name: "quiz", href: "/quiz" },
@@ -54,7 +53,7 @@ export default function NavLinks() {
             <Link className="flex flex-shrink-0 items-center" href={'/'}>
               <Image
                 className="h-8 w-auto"
-                src={iconPic}
+                src={LOGO}
                 alt="PLU Quiz"
                 priority
               />

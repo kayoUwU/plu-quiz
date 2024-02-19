@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import '@/ui/globals.css';
 import { DEFAULT_FONT } from '@/ui/fonts';
+import { SITE_BASE_URL } from '@/lib/constant';
 
 export const metadata: Metadata = {
   title: "PLU code Quiz",
@@ -9,15 +10,12 @@ export const metadata: Metadata = {
   keywords:['PLU', 'Price look-up codes', 'Quiz'],
   openGraph: {
     type: "website",
-    url: "http://localhost:3000/",
+    url: SITE_BASE_URL,
     title: "PLU code Quiz",
     description: "quiz on entering the PLU code by looking at the : picture.",
     siteName: "PLU code Quiz",
-    images: [{
-      url: "http://localhost:3000/next.svg",
-    }],
   },
-  //metadataBase
+  metadataBase: new URL(SITE_BASE_URL),
 };
 
 export default function RootLayout({
