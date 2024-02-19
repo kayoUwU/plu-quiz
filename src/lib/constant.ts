@@ -6,4 +6,4 @@ export const AUTHOR = {
     icon: profilePic
 }
 
-export const BASE_PATH = process?.env?.BASE_PATH || '';
+export const BASE_PATH = process?.env?.NEXT_PUBLIC_BASE_PATH || '';

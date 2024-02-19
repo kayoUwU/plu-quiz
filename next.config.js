@@ -20,10 +20,10 @@ module.exports = (phase, {defaultConfig }) => {
 
     const config = {
         ...nextConfig,
-        basePath: defaultConfig.env.BASE_PATH || '',
+        basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
         // for github action static assets
         env: {
-            BASE_PATH: nextConfig.basePath || '',
+            NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
         }
     };
     console.log("config ",config);
