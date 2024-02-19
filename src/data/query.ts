@@ -1,5 +1,6 @@
 import {Plu} from '@/entity/plu';
 import {PLU_DATA} from '@/data/pluData';
+import {BASE_PATH} from '@/lib/constant';
 
 export function getQuestionBank():Plu[]  {
     const result:Plu[] = [];
@@ -9,4 +10,4 @@ export function getQuestionBank():Plu[]  {
     return result;
 };
 
-export const IMAGE_PATH_PREFIX = "/plu_img/";
+export const IMAGE_PATH_PREFIX = BASE_PATH.concat("/plu_img/");

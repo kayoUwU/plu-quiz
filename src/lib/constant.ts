@@ -5,3 +5,5 @@ export const AUTHOR = {
     name: 'Kayou',
     icon: profilePic
 }
+
+export const BASE_PATH = process.env.BASE_PATH? process.env.BASE_PATH : '';
