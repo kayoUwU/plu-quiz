@@ -10,8 +10,8 @@ const nextConfig = {
 
 module.exports = (phase, {defaultConfig }) => {
     console.log("phase",phase);
-    console.log("defaultConfig ",defaultConfig);
     if (phase === PHASE_DEVELOPMENT_SERVER) {
+        console.log("defaultConfig ",defaultConfig);
         return {
             /* development only config options here */
         }
@@ -20,11 +20,12 @@ module.exports = (phase, {defaultConfig }) => {
 
     const config = {
         ...nextConfig,
+        basePath: defaultConfig.env.BASE_PATH || '',
         // for github action static assets
         env: {
             BASE_PATH: nextConfig.basePath || '',
         }
     };
-
+    console.log("config ",config);
     return config;
 };
