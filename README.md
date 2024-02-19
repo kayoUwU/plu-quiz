@@ -77,3 +77,4 @@ Next.js
 - `error.tsx` file can be used to define a UI boundary for a route segment. It serves as a catch-all for unexpected errors and allows you to display a fallback UI to your users.
 - Links use <a> elements -> There's a full page refresh on each page navigation. In Next.js, <Link> allows you to do [client-side navigation](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#how-routing-and-navigation-works) with JavaScript.
 - [Images config](https://nextjs.org/docs/app/api-reference/next-config-js/images)
+- [Export with Image Optimization API] (https://nextjs.org/docs/messages/export-image-api)
