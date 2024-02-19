@@ -1,3 +1,4 @@
+import getConfig from 'next/config';
 import profilePic from '@/ui/image/kayou.webp';
 
 export const AUTHOR = {
@@ -6,4 +7,5 @@ export const AUTHOR = {
     icon: profilePic
 }
 
-export const BASE_PATH = process.env.BASE_PATH? process.env.BASE_PATH : '';
+const { publicRuntimeConfig } = getConfig();
+export const BASE_PATH = publicRuntimeConfig.BASE_PATH || '';

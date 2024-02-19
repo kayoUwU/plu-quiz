@@ -6,4 +6,9 @@ const nextConfig = {
     distDir: 'out',
 };
 
+// for github action static assets
+nextConfig.publicRuntimeConfig = {
+    BASE_PATH: nextConfig.basePath || ''
+};
+
 module.exports = nextConfig;
