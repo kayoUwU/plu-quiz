@@ -28,6 +28,7 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,10 +76,9 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build Static HTML with Next.js
         env: 
-          NEXT_PUBLIC_BASE_PATH: ${{ env.WEB_BASE_PATH }}
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.WEB_BASE_PATH }}
         run: |
           echo "NEXT_PUBLIC_BASE_PATH: $NEXT_PUBLIC_BASE_PATH"
-          cat next.config.js
           echo ${{ github.workspace }}
           ${{ steps.detect-package-manager.outputs.runner }} run build
           pwd

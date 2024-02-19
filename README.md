@@ -41,7 +41,7 @@ npx serve@latest out
 ```
 
 ## Github Action
-- pass github page base path to environment vaiable `WEB_BASE_PATH` in settings
+- pass github page base path to environment vaiable `WEB_BASE_PATH` in `production` enviorment settings
 
 ## Dependencies
 - [Tailwind CSS](https://tailwindcss.com/) as css style

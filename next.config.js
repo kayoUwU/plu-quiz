@@ -3,7 +3,7 @@
 // const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const nextConfig = {
     // for github action inject
-    //images: {unoptimized: true},experimental: {images: {unoptimized: true}},basePath: "",
+    images: {unoptimized: true},experimental: {images: {unoptimized: true}},
     output: 'export',
     distDir: 'out',
 };
@@ -21,12 +21,12 @@ module.exports = (phase, {defaultConfig }) => {
     const config = {
         ...nextConfig,
 
-        // for static assets
+        // for static assets path
         env: {
             NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
         }
     };
-    // for next js
+    // for next js path
     if(process.env.NEXT_PUBLIC_BASE_PATH?.trim()!='') {
         config.basePath = process.env.NEXT_PUBLIC_BASE_PATH;
     }
