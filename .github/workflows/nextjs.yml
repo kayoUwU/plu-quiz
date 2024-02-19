@@ -76,7 +76,6 @@ jobs:
       - name: Build Static HTML with Next.js
         run: |
           cat next.config.js
-          cat next.config.mjs
           echo ${{ github.workspace }}
           ${{ steps.detect-package-manager.outputs.runner }} run build
           pwd
