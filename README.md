@@ -40,6 +40,9 @@ yarn run build
 npx serve@latest out
 ```
 
+## Github Action
+- pass github page base path to environment vaiable `WEB_BASE_PATH` in settings
+
 ## Dependencies
 - [Tailwind CSS](https://tailwindcss.com/) as css style
 - This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load a custom Google Font.

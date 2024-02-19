@@ -75,7 +75,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build Static HTML with Next.js
         env: 
-          NEXT_PUBLIC_BASE_PATH: ${{ github.repository }}
+          NEXT_PUBLIC_BASE_PATH: ${{ env.WEB_BASE_PATH }}
         run: |
           echo "NEXT_PUBLIC_BASE_PATH: $NEXT_PUBLIC_BASE_PATH"
           cat next.config.js
