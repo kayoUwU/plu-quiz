@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import '@/ui/globals.css';
 import { DEFAULT_FONT } from '@/ui/fonts';
 import { SITE_BASE_URL } from '@/lib/constant';
+import {AnsweredProvider} from '@/data/store/answeredContext';
 
 export const metadata: Metadata = {
   title: "PLU code Quiz",
@@ -26,7 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${DEFAULT_FONT.className} antialiased bg-black`}>
-        {children}
+        <AnsweredProvider>
+          {children}
+        </AnsweredProvider>
       </body>
     </html>
   );

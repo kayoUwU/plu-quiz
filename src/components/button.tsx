@@ -15,12 +15,9 @@ export const BUTTON_STYLE_NAME = {
     second: 'second' as VariantsKey
 }
 
-export type VariantButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant?: VariantsKey | undefined,
     children: React.ReactNode
-};
-
-export type ButtonProps = VariantButtonProps & {
-    variant: VariantsKey | undefined
 }
 
 function Button(props: ButtonProps) : JSX.Element {
@@ -41,16 +38,16 @@ Button.defaultProps = {
 
 export default memo(Button);
 
-const _primaryButton = (props: VariantButtonProps) => {
+const _primaryButton = (props: ButtonProps) => {
     return Button({...props, variant: BUTTON_STYLE_NAME.primary});
 };
 export const PrimaryButton = memo(_primaryButton);
 
-const _primaryOutlineButton = (props: VariantButtonProps) => {
+const _primaryOutlineButton = (props: ButtonProps) => {
     return Button({...props, variant: BUTTON_STYLE_NAME.primary_outline});
 }
 export const PrimaryOutlineButton = memo(_primaryOutlineButton);
 
-export const SecondaryButton = (props: VariantButtonProps) => {
+export const SecondaryButton = (props: ButtonProps) => {
     return Button({...props, variant: BUTTON_STYLE_NAME.second});
 }

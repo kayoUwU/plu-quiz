@@ -1,29 +1,40 @@
 "use client";
 
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Plu } from "@/entity/plu";
 import { getQuestionBank } from "@/data/query";
 
-import QuizFrame from "./quizFrame";
-import {PrimaryButton, PrimaryOutlineButton} from "@/components/button";
+import QuizFrame from "./components/quizFrame";
+import { PrimaryButton, PrimaryOutlineButton } from "@/components/button";
+import {
+  useAnsweredDispatch,
+  ANSWERED_DISPATCH_ACTION,
+} from "@/data/store/answeredContext";
+import Modal from "@/components/modal";
+import AnsweredList from "./components/answeredList";
 
 const QuizPage = function Page() {
+  const answeredDispatch = useAnsweredDispatch();
+  const [isAnswerdModalOpen, setIsAnswerdModalOpen] = useState<boolean>(false);
   const [questions, setQuestions] = useState<Plu[]>([]);
-  const [answered, setAnswered] = useState<Plu[]>([]);
   const [totalQuestionNo, setTotalQuestionNo] = useState<number>(0);
   const [correctQuestionNo, setCorrectQuestionNo] = useState<number>(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);
   const [currentQuestion, setCurrentQuestion] = useState<Plu | null>(null);
+  const [currentQuestionNo, setCurrentQuestionNo] = useState<number>(0);
 
   const restartQuiz = useCallback(() => {
     const res = getQuestionBank();
+    answeredDispatch({
+      type: ANSWERED_DISPATCH_ACTION.RESET,
+    });
     setQuestions(res);
-    setAnswered([]);
     setTotalQuestionNo(res.length);
     setCorrectQuestionNo(0);
     setCurrentQuestion(null);
-  }, []);
+    setCurrentQuestionNo(0);
+  }, [answeredDispatch]);
 
   useEffect(() => {
     restartQuiz();
@@ -31,9 +42,13 @@ const QuizPage = function Page() {
 
   const nextQuestion = useCallback(() => {
     if (questions.length != 0) {
-      const index = questions.length!==1? Math.trunc(Math.random() * (questions.length - 1)) : 0;
+      const index =
+        questions.length !== 1
+          ? Math.trunc(Math.random() * (questions.length - 1))
+          : 0;
       setCurrentQuestionIndex(index);
       setCurrentQuestion(questions[index]);
+      setCurrentQuestionNo((item) => item + 1);
     }
   }, [questions]);
 
@@ -48,12 +63,15 @@ const QuizPage = function Page() {
       //skip question
       const answer = currentQuestion;
       setQuestions(questions.toSpliced(currentQuestionIndex, 1));
-      setAnswered((item) => [...item, answer]);
+      answeredDispatch({
+        type: ANSWERED_DISPATCH_ACTION.ADD,
+        payload: [answer],
+      });
     }
     if (currentQuestion != null) {
       setCurrentQuestion(null);
     }
-  }, [currentQuestion, currentQuestionIndex, questions]);
+  }, [answeredDispatch, currentQuestion, currentQuestionIndex, questions]);
 
   const checkAnswer = useCallback(
     (input: string) => {
@@ -73,23 +91,43 @@ const QuizPage = function Page() {
         answer.quizResult = false;
       }
       setQuestions((item) => item.toSpliced(currentQuestionIndex, 1));
-      setAnswered((item) => [...item, answer]);
+      answeredDispatch({
+        type: ANSWERED_DISPATCH_ACTION.ADD,
+        payload: [answer],
+      });
       setCurrentQuestion(answer);
       setCurrentQuestionIndex(-1);
     },
-    [currentQuestion, currentQuestionIndex]
+    [answeredDispatch, currentQuestion, currentQuestionIndex]
+  );
+
+  const onOpenAnsweredModal = useCallback(() => {
+    setIsAnswerdModalOpen(true);
+  }, []);
+
+  const onCloseAnsweredModal = useCallback(() => {
+    setIsAnswerdModalOpen(false);
+  }, []);
+
+  const AnsweredModal = useMemo(
+    () => (
+      <Modal title='Result' onClose={onCloseAnsweredModal}>
+        <AnsweredList />
+      </Modal>
+    ),
+    [onCloseAnsweredModal]
   );
 
   return (
     <main>
       <div className="flex flex-wrap">
-        <PrimaryOutlineButton
-          className="flex-1"
-          onClick={restartQuiz}
-        >
+        <PrimaryOutlineButton className="flex-1" onClick={restartQuiz}>
           Restart
         </PrimaryOutlineButton>
-        <p className="flex-1 text-center self-center">{`${answered.length}/${totalQuestionNo} (${correctQuestionNo})`}</p>
+        <div
+          className="flex-1 text-center self-center"
+          onClick={onOpenAnsweredModal}
+        >{`${currentQuestionNo}/${totalQuestionNo} (${correctQuestionNo})`}</div>
         <PrimaryButton
           className="flex-1"
           onClick={onNextQuestion}
@@ -98,13 +136,15 @@ const QuizPage = function Page() {
           Next Question
         </PrimaryButton>
       </div>
-      
+
       {currentQuestion !== null && (
         <QuizFrame
           currentQuestion={currentQuestion}
           checkAnswer={checkAnswer}
         />
       )}
+
+      {isAnswerdModalOpen && AnsweredModal}
     </main>
   );
 };
