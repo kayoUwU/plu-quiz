@@ -5,7 +5,8 @@ import {BASE_PATH} from '@/lib/constant';
 export function getQuestionBank():Plu[]  {
     const result:Plu[] = [];
     for(const data of PLU_DATA){
-        result.push({...data, quizResult:null});
+        const item = new Plu();
+        result.push({...item,...data});
     }
     return result;
 };

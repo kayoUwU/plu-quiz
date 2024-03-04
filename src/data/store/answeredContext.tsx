@@ -4,23 +4,24 @@
 import {
   Dispatch,
   ReactNode,
-  ReducerWithoutAction,
   createContext,
   useContext,
   useReducer,
 } from "react";
 
+import { getQuestionBank } from "@/data/query";
 import { Plu } from "@/entity/plu";
+import { ResultStatus } from "@/entity/enum/resultStatus";
 
 export enum ANSWERED_DISPATCH_ACTION {
-  ADD = "add",
+  RESULT = "result",
   RESET = "reset",
 }
 
 type AnsweredContextType = Plu[];
 type AnsweredDispatchAction = {
   type: ANSWERED_DISPATCH_ACTION;
-  payload?: AnsweredContextType | undefined;
+  payload?: Plu | undefined;
 };
 
 function answeredReducer(
@@ -28,11 +29,18 @@ function answeredReducer(
   action: AnsweredDispatchAction
 ): AnsweredContextType {
   switch (action.type) {
-    case ANSWERED_DISPATCH_ACTION.ADD: {
-      return action.payload ? [...answered, ...action.payload] : answered;
+    case ANSWERED_DISPATCH_ACTION.RESULT: {
+      if (action.payload) {
+        const result = action.payload;
+        return answered.map((item) => (item.id === result.id ? result : item));
+      }
+      return answered;
     }
     case ANSWERED_DISPATCH_ACTION.RESET: {
-      return [];
+      return answered.map((item) => ({
+        ...item,
+        quizResult: ResultStatus.Status.IN_QUENE,
+      }));
     }
     default: {
       console.error(Error("Unknown action: " + action.type));
@@ -41,6 +49,7 @@ function answeredReducer(
   }
 }
 
+const initalAnsweredContext = getQuestionBank();
 const AnsweredContext = createContext<AnsweredContextType>([]);
 const AnsweredDispatchContext = createContext<Dispatch<AnsweredDispatchAction>>(
   (answeredDispatchAction: AnsweredDispatchAction) => {}
@@ -55,7 +64,7 @@ export function useAnsweredDispatch() {
 }
 
 export function AnsweredProvider({ children }: { children: ReactNode }) {
-  const [answered, dispatch] = useReducer(answeredReducer, []);
+  const [answered, dispatch] = useReducer(answeredReducer, initalAnsweredContext);
 
   return (
     <AnsweredContext.Provider value={answered}>

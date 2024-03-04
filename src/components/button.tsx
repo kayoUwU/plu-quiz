@@ -4,7 +4,8 @@ const baseStyle = 'py-2 px-4 rounded shadow focus:shadow-outline focus:outline-n
 const variantsStyles = {
     primary : 'font-bold text-white bg-indigo-500 hover:bg-indigo-700',
     primary_outline : 'bg-transparent hover:bg-indigo-700 text-indigo-500 font-semibold hover:text-white hover:font-bold border border-indigo-500 hover:border-transparent',
-    second:'font-bold text-white bg-orange-500 hover:bg-orange-700'
+    second:'font-bold text-white bg-orange-500 hover:bg-orange-700',
+    warn:'font-bold text-white bg-rose-500 hover:bg-rose-700'
 };
 
 type VariantsKey =  keyof typeof variantsStyles;
@@ -12,7 +13,8 @@ type VariantsKey =  keyof typeof variantsStyles;
 export const BUTTON_STYLE_NAME = {
     primary : 'primary' as VariantsKey,
     primary_outline: 'primary_outline' as VariantsKey,
-    second: 'second' as VariantsKey
+    second: 'second' as VariantsKey,
+    warn: 'warn' as VariantsKey,
 }
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -48,6 +50,12 @@ const _primaryOutlineButton = (props: ButtonProps) => {
 }
 export const PrimaryOutlineButton = memo(_primaryOutlineButton);
 
-export const SecondaryButton = (props: ButtonProps) => {
+const _secondaryButton = (props: ButtonProps) => {
     return Button({...props, variant: BUTTON_STYLE_NAME.second});
 }
+export const SecondaryButton = memo(_secondaryButton);
+
+const _warnButton = (props: ButtonProps) => {
+    return Button({...props, variant: BUTTON_STYLE_NAME.warn});
+}
+export const WarnButton = memo(_warnButton);

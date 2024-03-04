@@ -1,0 +1,34 @@
+import Image from "next/image";
+
+import { IMAGE_PATH_PREFIX } from "@/data/query";
+import { Plu } from "@/entity/plu";
+import { memo } from "react";
+
+export type QuestionFrameProps = {
+  question: Plu;
+};
+
+const QuestionFrame = function ({ question }: Readonly<QuestionFrameProps>) {
+  return (
+    <>
+      <div className="flex min-w-0 gap-x-4">
+        <Image
+          className="flex-none rounded-full bg-gray-50"
+          src={`${IMAGE_PATH_PREFIX}${question.image}`}
+          alt={question.name}
+          width={45}
+          height={45}
+        />
+        <div className="min-w-0 flex-auto">
+          <p>{question.name}</p>
+        </div>
+      </div>
+      
+      <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+        <p>{question.plu}</p>
+      </div>
+    </>
+  );
+};
+
+export default memo(QuestionFrame);

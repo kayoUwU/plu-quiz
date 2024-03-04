@@ -2,6 +2,7 @@ import { memo, useState } from "react";
 import Image from "next/image";
 
 import { Plu } from "@/entity/plu";
+import { ResultStatus } from "@/entity/enum/resultStatus";
 import { IMAGE_PATH_PREFIX } from "@/data/query";
 import { SecondaryButton } from "@/components/button";
 import Input from '@/components/input';
@@ -13,6 +14,7 @@ export type QuizFrameProps = {
 
 function QuizFrame(props: Readonly<QuizFrameProps>) {
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
+  const resultDisplay = ResultStatus.display(props.currentQuestion.quizResult);
 
   return (
     <div className="flex flex-col w-full">
@@ -22,6 +24,7 @@ function QuizFrame(props: Readonly<QuizFrameProps>) {
         alt={props.currentQuestion.name}
         width={500}
         height={500}
+        priority
       />
 
       <p>{props.currentQuestion.name}</p>
@@ -46,8 +49,8 @@ function QuizFrame(props: Readonly<QuizFrameProps>) {
 
       </div>
 
-      {props.currentQuestion.quizResult === true && <p>Correct!</p>}
-      {props.currentQuestion.quizResult === false && (
+      <p className={resultDisplay.color}>{resultDisplay.text}</p>
+      {props.currentQuestion.quizResult ===  ResultStatus.Status.WRONG && (
         <p>Correct answer is {props.currentQuestion.plu}</p>
       )}
     </div>

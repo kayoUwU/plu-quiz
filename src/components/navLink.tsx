@@ -9,7 +9,8 @@ import { NavLink } from "@/entity/navLink";
 import {AUTHOR, LOGO} from '@/lib/constant';
 
 const links: NavLink[] = [
-  { key: "quiz", name: "quiz", href: "/quiz" },
+  { key: "quiz", name: "Quiz", href: "/quiz" },
+  { key: "revision", name: "Revision", href: "/revision" },
 ];
 
 const MAIN_COLOR = 'bg-orange-500';
@@ -55,7 +56,6 @@ export default function NavLinks() {
                 className="h-8 w-auto"
                 src={LOGO}
                 alt="PLU Quiz"
-                priority
               />
             </Link>
             <div className="hidden sm:ml-6 sm:block">
@@ -104,7 +104,6 @@ export default function NavLinks() {
                     className="h-8 w-8 rounded-full dark:invert"
                     src={AUTHOR.icon}
                     alt={AUTHOR.name}
-                    priority
                   />
                 </a>
               </div>

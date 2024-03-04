@@ -3,11 +3,16 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Plu } from "@/entity/plu";
-import { getQuestionBank } from "@/data/query";
+import { ResultStatus } from "@/entity/enum/resultStatus";
 
 import QuizFrame from "./components/quizFrame";
-import { PrimaryButton, PrimaryOutlineButton } from "@/components/button";
 import {
+  PrimaryButton,
+  PrimaryOutlineButton,
+  WarnButton,
+} from "@/components/button";
+import {
+  useAnswered,
   useAnsweredDispatch,
   ANSWERED_DISPATCH_ACTION,
 } from "@/data/store/answeredContext";
@@ -15,8 +20,10 @@ import Modal from "@/components/modal";
 import AnsweredList from "./components/answeredList";
 
 const QuizPage = function Page() {
+  const answered = useAnswered();
   const answeredDispatch = useAnsweredDispatch();
   const [isAnswerdModalOpen, setIsAnswerdModalOpen] = useState<boolean>(false);
+  const [isReset, setIsReset] = useState<boolean>(true);
   const [questions, setQuestions] = useState<Plu[]>([]);
   const [totalQuestionNo, setTotalQuestionNo] = useState<number>(0);
   const [correctQuestionNo, setCorrectQuestionNo] = useState<number>(0);
@@ -25,20 +32,43 @@ const QuizPage = function Page() {
   const [currentQuestionNo, setCurrentQuestionNo] = useState<number>(0);
 
   const restartQuiz = useCallback(() => {
-    const res = getQuestionBank();
     answeredDispatch({
       type: ANSWERED_DISPATCH_ACTION.RESET,
     });
-    setQuestions(res);
-    setTotalQuestionNo(res.length);
+    setIsReset(true);
+    setQuestions([]);
+    setTotalQuestionNo(0);
     setCorrectQuestionNo(0);
     setCurrentQuestion(null);
     setCurrentQuestionNo(0);
   }, [answeredDispatch]);
 
   useEffect(() => {
-    restartQuiz();
-  }, [restartQuiz]);
+    //load questions
+    if (isReset) {
+      let correctNo = 0;
+      const res = answered.filter(
+        (item) => {
+          if(item.quizResult === ResultStatus.Status.IN_QUENE){
+            return true;
+          }
+          if(item.quizResult === ResultStatus.Status.CORRECT){
+            correctNo++;
+          }
+          return false;
+        }
+      );
+      setQuestions(res);
+      setTotalQuestionNo(answered.length);
+      setCurrentQuestionNo(answered.length - res.length);
+      setCorrectQuestionNo(correctNo);
+      setIsReset(false);
+    }
+  }, [answered, isReset, questions.length]);
+
+  // useEffect(() => {
+  //   restartQuiz();
+  // }, [restartQuiz]);
 
   const nextQuestion = useCallback(() => {
     if (questions.length != 0) {
@@ -59,13 +89,17 @@ const QuizPage = function Page() {
   }, [currentQuestion, nextQuestion, questions?.length]);
 
   const onNextQuestion = useCallback(() => {
-    if (currentQuestion !== null && currentQuestion.quizResult === null) {
+    if (
+      currentQuestion !== null &&
+      currentQuestion.quizResult === ResultStatus.Status.IN_QUENE
+    ) {
       //skip question
       const answer = currentQuestion;
+      answer.quizResult = ResultStatus.Status.SKIP;
       setQuestions(questions.toSpliced(currentQuestionIndex, 1));
       answeredDispatch({
-        type: ANSWERED_DISPATCH_ACTION.ADD,
-        payload: [answer],
+        type: ANSWERED_DISPATCH_ACTION.RESULT,
+        payload: answer,
       });
     }
     if (currentQuestion != null) {
@@ -86,14 +120,14 @@ const QuizPage = function Page() {
       const answer = currentQuestion;
       if (String(input).trim() === currentQuestion.plu) {
         setCorrectQuestionNo((item) => item + 1);
-        answer.quizResult = true;
+        answer.quizResult = ResultStatus.Status.CORRECT;
       } else {
-        answer.quizResult = false;
+        answer.quizResult = ResultStatus.Status.WRONG;
       }
       setQuestions((item) => item.toSpliced(currentQuestionIndex, 1));
       answeredDispatch({
-        type: ANSWERED_DISPATCH_ACTION.ADD,
-        payload: [answer],
+        type: ANSWERED_DISPATCH_ACTION.RESULT,
+        payload: answer,
       });
       setCurrentQuestion(answer);
       setCurrentQuestionIndex(-1);
@@ -111,23 +145,34 @@ const QuizPage = function Page() {
 
   const AnsweredModal = useMemo(
     () => (
-      <Modal title='Result' onClose={onCloseAnsweredModal}>
-        <AnsweredList />
+      <Modal
+        title={`Result [${correctQuestionNo}/${totalQuestionNo}]`}
+        onClose={onCloseAnsweredModal}
+      >
+        <AnsweredList answered={answered} />
       </Modal>
     ),
-    [onCloseAnsweredModal]
+    [answered, correctQuestionNo, onCloseAnsweredModal, totalQuestionNo]
   );
+
+  const questionNoDisplay =
+    questions.length === 0 && currentQuestionNo === totalQuestionNo
+      ? "View Result"
+      : `${currentQuestionNo}/${totalQuestionNo} (${correctQuestionNo})`;
 
   return (
     <main>
       <div className="flex flex-wrap">
-        <PrimaryOutlineButton className="flex-1" onClick={restartQuiz}>
+        <WarnButton className="flex-1" onClick={restartQuiz}>
           Restart
-        </PrimaryOutlineButton>
-        <div
+        </WarnButton>
+        <PrimaryOutlineButton
+          title="View Result"
           className="flex-1 text-center self-center"
           onClick={onOpenAnsweredModal}
-        >{`${currentQuestionNo}/${totalQuestionNo} (${correctQuestionNo})`}</div>
+        >
+          {questionNoDisplay}
+        </PrimaryOutlineButton>
         <PrimaryButton
           className="flex-1"
           onClick={onNextQuestion}
