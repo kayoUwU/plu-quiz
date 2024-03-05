@@ -24,7 +24,7 @@ const QuestionFrame = function ({ question }: Readonly<QuestionFrameProps>) {
         </div>
       </div>
       
-      <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+      <div className="shrink-0 flex flex-col items-start sm:items-end">
         <p>{question.plu}</p>
       </div>
     </>

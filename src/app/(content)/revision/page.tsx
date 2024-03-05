@@ -9,7 +9,7 @@ const RevisionPage = function Page() {
   return (
     <ul role="list" className="divide-y divide-gray-100">
       {answered.map((item) => (
-        <li key={item.id} className="sm:flex sm:justify-between gap-x-6 py-5">
+        <li key={item.id} className="sm:flex sm:justify-between gap-x-6 p-4">
           <QuestionFrame question={item} />
         </li>
       ))}

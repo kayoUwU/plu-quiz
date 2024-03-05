@@ -26,7 +26,7 @@ function Button(props: ButtonProps) : JSX.Element {
     return (
         <button
             {...props}
-            className={`${baseStyle} ${props.variant?variantsStyles[props.variant]:''} ${props.className}`}
+            className={`${baseStyle} ${props.variant?variantsStyles[props.variant]:''} ${props.disabled?'cursor-not-allowed':''} ${props.className}`}
         >
             {props.children}
         </button>

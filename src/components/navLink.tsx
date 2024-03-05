@@ -5,13 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 
-import { NavLink } from "@/entity/navLink";
-import {AUTHOR, LOGO} from '@/lib/constant';
-
-const links: NavLink[] = [
-  { key: "quiz", name: "Quiz", href: "/quiz" },
-  { key: "revision", name: "Revision", href: "/revision" },
-];
+import {AUTHOR, LINKS, LOGO} from '@/lib/constant';
 
 const MAIN_COLOR = 'bg-orange-500';
 const MAIN_SHADOW_COLOR = 'shadow-orange-500/50'
@@ -60,7 +54,7 @@ export default function NavLinks() {
             </Link>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {links.map((link) => {
+                {LINKS.map((link) => {
                   return (
                     <Link
                       key={link.name}
@@ -82,7 +76,7 @@ export default function NavLinks() {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <a
               className={ICON_STYLE}
-              href={AUTHOR.link}
+              href={AUTHOR.projectLink}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -101,7 +95,7 @@ export default function NavLinks() {
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open {AUTHOR.name} website</span>
                   <Image
-                    className="h-8 w-8 rounded-full dark:invert"
+                    className="h-8 w-8 rounded-full"
                     src={AUTHOR.icon}
                     alt={AUTHOR.name}
                   />
@@ -115,7 +109,7 @@ export default function NavLinks() {
       {isMenuOpen && (
         <div className="sm:hidden">
           <div className="space-y-1 px-2 pb-3 pt-2">
-            {links.map((link) => {
+            {LINKS.map((link) => {
               return (
                 <Link
                   key={link.name}

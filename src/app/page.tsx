@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import {AUTHOR, LOGO} from '@/lib/constant';
+import { AUTHOR, LOGO, LINKS } from "@/lib/constant";
+import DescriptionButton from "@/components/descriptionButton";
 
 export default function Page() {
   return (
@@ -40,70 +41,34 @@ export default function Page() {
         />
       </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <Link
-          href="/quiz"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Start Quiz{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Test PLU code.
-          </p>
-        </Link>
+      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-fullfunction lg:mb-0 lg:grid-cols-4 lg:text-left">
+        {LINKS.map((item) => (
+          <DescriptionButton
+            key={item.key}
+            title={item.name}
+            description={item.description}
+            renderElement={(className: string, children: JSX.Element) => (
+              <Link key={item.key} href={item.href} className={className}>
+                {children}
+              </Link>
+            )}
+          />
+        ))}
 
-        <Link
-          href="/revision"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn PLU code Quiz{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about the PLU code
-          </p>
-        </Link>
-
-        <a
-          href=""
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            About{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore about the project.
-          </p>
-        </a>
-
-        <a
-          href="https://www.ifpsglobal.com/plu-codes-search"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            PLU code search{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Review PLU Code Specifications.
-          </p>
-        </a>
+        <DescriptionButton
+          title="PLU code search"
+          description="Review PLU Code Specifications."
+          renderElement={(className: string, children: JSX.Element) => (
+            <a
+            href="https://www.ifpsglobal.com/plu-codes-search"
+            className={className}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+              {children}
+            </a>
+          )}
+        />
       </div>
     </main>
   );

@@ -36,7 +36,7 @@ function Modal(props: Readonly<ModalProps>) {
               <div className="sm:flex sm:items-center sm:justify-end">
                 <div className="mx-auto sm:order-last sm:self-start flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-4 sm:w-4">
                   <svg
-                    className="h-6 w-6 text-red-600"
+                    className="h-6 w-6 text-red-600 cursor-pointer"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"

@@ -7,13 +7,13 @@ import {AnsweredProvider} from '@/data/store/answeredContext';
 
 export const metadata: Metadata = {
   title: "PLU code Quiz",
-  description: "quiz on entering the PLU code by looking at the : picture.",
+  description: "quiz on entering the PLU code by looking at the picture.",
   keywords:['PLU', 'Price look-up codes', 'Quiz'],
   openGraph: {
     type: "website",
     url: SITE_BASE_URL,
     title: "PLU code Quiz",
-    description: "quiz on entering the PLU code by looking at the : picture.",
+    description: "quiz on entering the PLU code by looking at the picture.",
     siteName: "PLU code Quiz",
   },
   metadataBase: new URL(SITE_BASE_URL),

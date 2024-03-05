@@ -50,14 +50,6 @@ s
 - This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load a custom Google Font.
 
 ## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
 Src Folder structure
 - /app: Contains all the routes, components, and logic for application.
 - /lib: Contains functions used in your application, such as reusable utility functions.
@@ -65,6 +57,13 @@ Src Folder structure
 - /components : Contains all the UI components for application
 - /data: Contains data for application
 - /public: Contains all the static assets for application, such as images.
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 Next.js 
 - [Static export](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports)
@@ -78,3 +77,4 @@ Next.js
 - Links use <a> elements -> There's a full page refresh on each page navigation. In Next.js, <Link> allows you to do [client-side navigation](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#how-routing-and-navigation-works) with JavaScript.
 - [Images config](https://nextjs.org/docs/app/api-reference/next-config-js/images)
 - [Export with Image Optimization API] (https://nextjs.org/docs/messages/export-image-api)
+- [Metadata](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
