@@ -1,0 +1,4 @@
+[submodule "plu-public-img"]
+	path = public/plu_img
+	url = git@github.com:kayoUwU/plu-public-img
+	branch = master
