@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${DEFAULT_FONT.className} antialiased bg-black`}>
+      <body className={`${DEFAULT_FONT.className} antialiased bg-gradient-to-b from-orange-500 to-red-500`}>
         <AnsweredProvider>
           {children}
         </AnsweredProvider>

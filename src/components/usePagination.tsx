@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
 import { SecondaryButton } from "./button";
 
@@ -32,10 +32,17 @@ export default function usePagination<Type>({
   data,
   renderList,
 }: Readonly<PaginationParams<Type>>): JSX.Element {
+  const [isPending, startTransition] = useTransition();
   const [offset, setOffset] = useState<number>(getOffset());
   const [currentData, setCurrentData] = useState<Type[]>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const _setCurrentData = useCallback((data:Type[]) => {
+    startTransition(()=>{
+      setCurrentData(data);
+    });
+  },[]);
 
   useEffect(()=>{
     localStorage?.setItem(PAGE_SIZE_STORAGE_KEY,String(offset));
@@ -47,7 +54,6 @@ export default function usePagination<Type>({
       if (data.length % offset > 0) {
         mTotalPage += 1;
       }
-      console.log(mTotalPage);
       setTotalPage(mTotalPage);
       let mCurrentPage = currentPage;
       if (currentPage === 0) {
@@ -61,9 +67,9 @@ export default function usePagination<Type>({
 
       const start = offset * (currentPage - 1);
       const end = Math.min(start + offset, data.length);
-      setCurrentData(data.slice(start, end));
+      _setCurrentData(data.slice(start, end));
     }
-  }, [currentPage, data, offset]);
+  }, [_setCurrentData, currentPage, data, offset]);
 
   const List = useMemo(() => {
     if (currentData.length != 0) {
@@ -78,7 +84,7 @@ export default function usePagination<Type>({
     }
     const start = offset * currentPage;
     const end = Math.min(start + offset, data.length);
-    setCurrentData(data.slice(start, end));
+    _setCurrentData(data.slice(start, end));
 
     setCurrentPage((item) => item + 1);
   };
@@ -89,7 +95,7 @@ export default function usePagination<Type>({
     }
     const start = offset * (currentPage - 2);
     const end = Math.min(start + offset, data.length);
-    setCurrentData(data.slice(start, end));
+    _setCurrentData(data.slice(start, end));
 
     setCurrentPage((item) => item - 1);
   };

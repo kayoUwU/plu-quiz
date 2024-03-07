@@ -2,7 +2,7 @@ import NavLink from "@/components/navLink";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-screen overflow-y-hidden flex flex-col items-stretch content-center">
+    <div className="h-screen bg-black overflow-y-hidden flex flex-col items-stretch content-center">
       <div className="flex-none">
         <NavLink/>
       </div>

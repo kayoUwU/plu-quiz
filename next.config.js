@@ -12,7 +12,8 @@ module.exports = (phase, { defaultConfig }) => {
         return {
             /* development only config options here */
             env: {
-                NEXT_PUBLIC_SITE_BASE_URL: 'http://localhost:3000'
+                NEXT_PUBLIC_BASE_PATH: '',
+                NEXT_PUBLIC_SITE_BASE_URL: 'http://localhost:3000',
             }
         }
     }
