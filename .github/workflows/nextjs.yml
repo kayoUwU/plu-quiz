@@ -81,6 +81,7 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: ${{ vars.WEB_BASE_PATH }}
           NEXT_PUBLIC_SITE_BASE_URL: ${{ vars.WEB_URL }}
         run: |
+          mv "plu-public-img/plu_img/" "public/plu_img"
           echo "NEXT_PUBLIC_BASE_PATH: $NEXT_PUBLIC_BASE_PATH"
           echo "NEXT_PUBLIC_SITE_BASE_URL: $NEXT_PUBLIC_SITE_BASE_URL"
           echo ${{ github.workspace }}
