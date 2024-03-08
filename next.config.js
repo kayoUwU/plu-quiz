@@ -5,33 +5,31 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 // for common settings
 const nextConfig = {
-    webpack: (config) => {
-        // append the CopyPlugin to copy the file to your public dir
-        config.plugins.push(
-          new CopyPlugin({
-            patterns: [
-              { from: "plu-public-img/plu_img", to: "public/plu_img" },
-            ],
-          }),
-        )
-    
-        // Important: return the modified config
-        return config
-      }
 };
 
 module.exports = (phase, { defaultConfig }) => {
     console.log("phase", phase);
     if (phase === PHASE_DEVELOPMENT_SERVER) {
         console.log("defaultConfig ", defaultConfig);
-        return {
+        const config = {
             ...nextConfig,
             /* development only config options here */
             env: {
                 NEXT_PUBLIC_BASE_PATH: '',
                 NEXT_PUBLIC_SITE_BASE_URL: 'http://localhost:3000',
+            },
+            webpack: (_config) => {
+                _config.plugins.push(
+                    new CopyPlugin({
+                        patterns: [
+                            { from: "plu-public-img/plu_img", to: "public/plu_img" },
+                        ],
+                    }),
+                )
+                return _config
             }
         }
+        console.log("config ", config);
     }
 
     // for production
