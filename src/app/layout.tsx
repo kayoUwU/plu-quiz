@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import "@/ui/globals.css";
 import { DEFAULT_FONT } from "@/ui/fonts";
-import { SITE_BASE_URL } from "@/lib/constant";
+import { SITE_BASE_URL, BASE_PATH } from "@/lib/constant";
 import { AppProvider } from "@/data/store/appProvider";
 
 export const metadata: Metadata = {
@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     title: "PLU code Quiz",
     description: "quiz on entering the PLU code by looking at the picture.",
     siteName: "PLU code Quiz",
+  },
+  icons: {
+    icon: BASE_PATH.concat("/favicon.ico"),
   },
   metadataBase: new URL(SITE_BASE_URL),
 };
