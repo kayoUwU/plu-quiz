@@ -26,10 +26,11 @@ module.exports = (phase, { defaultConfig }) => {
                         ],
                     }),
                 )
-                return _config
+                return _config;
             }
         }
         console.log("config ", config);
+        return config;
     }
 
     // for production
@@ -38,7 +39,7 @@ module.exports = (phase, { defaultConfig }) => {
         ...nextConfig,
         // no server for Image Optimization
         images: { unoptimized: true },
-        experimental: { images: { unoptimized: true } },
+        // experimental: { images: { unoptimized: true } },
         output: 'export',
         distDir: 'out',
     };

@@ -1,14 +1,19 @@
-import {Plu} from '@/entity/plu';
-import {PLU_DATA} from '@/data/pluData';
-import {BASE_PATH} from '@/lib/constant';
+import { Plu } from "@/entity/plu";
+import { BASE_PATH } from "@/lib/constant";
 
-export function getQuestionBank():Plu[]  {
-    const result:Plu[] = [];
-    for(const data of PLU_DATA){
-        const item = new Plu();
-        result.push({...item,...data});
-    }
-    return result;
-};
+export async function getQuestionBank() : Promise<Plu[]> {
+  const response = await fetch(BASE_PATH.concat("/pluData.json"), {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
 
-export const IMAGE_PATH_PREFIX = BASE_PATH.concat("/plu_img/");
+  const jsonObj = await response.json();
+  const result: Plu[] = [];
+  for (const data of jsonObj) {
+    const item = new Plu();
+    result.push({ ...item, ...data });
+  }
+  return result;
+}

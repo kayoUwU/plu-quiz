@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { Plu } from "@/entity/plu";
 import { ResultStatus } from "@/entity/enum/resultStatus";
-import { IMAGE_PATH_PREFIX } from "@/data/query";
+import { IMAGE_PATH_PREFIX } from "@/lib/constant";
 import { SecondaryButton } from "@/components/button";
 import Input from '@/components/input';
 

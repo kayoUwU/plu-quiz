@@ -32,7 +32,7 @@ export default function usePagination<Type>({
   data,
   renderList,
 }: Readonly<PaginationParams<Type>>): JSX.Element {
-  const [isPending, startTransition] = useTransition();
+  const [_, startTransition] = useTransition();
   const [offset, setOffset] = useState<number>(getOffset());
   const [currentData, setCurrentData] = useState<Type[]>([]);
   const [totalPage, setTotalPage] = useState<number>(0);

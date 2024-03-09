@@ -1,15 +1,15 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo } from "react";
 
 import QuestionFrame from "./components/questionFrame";
-import { getQuestionBank } from "@/data/query";
+import {useQuestionBank} from "@/data/store/questionBankContext";
 
 import usePagination from "@/components/usePagination";
 import { Plu } from "@/entity/plu";
 
 const RevisionPage = function Page() {
-  const answered = useMemo(() => getQuestionBank(), []);
+  const [questionBank,_] = useQuestionBank();
 
   const renderList = (data: Plu[])=>(
     (
@@ -22,8 +22,8 @@ const RevisionPage = function Page() {
       </ul>
     )
   )
-
-  const pagination = usePagination({data:answered,renderList:renderList});
+  
+  const pagination = usePagination({data:questionBank,renderList:renderList});
 
   return (
     <div className="h-full flex flex-col justify-start">

@@ -11,7 +11,11 @@ npx create-next-app@latest --user-yarn
 
 Convert Data
 ```
-python internal/csv_to_json.py -i='internal/plu_data.csv' -o='src/data/pluData.ts' -v='PLU_DATA'
+python internal/csv_to_json.py -i='plu-public-img/plu_data.csv' -o='src/data/pluData.ts' -v='PLU_DATA'
+```
+in submodule
+```
+python internal/csv_to_json.py -i='plu-public-img/plu_data.csv' -o='public/pluData.json' -j
 ```
 
 install

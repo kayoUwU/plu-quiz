@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { IMAGE_PATH_PREFIX } from "@/data/query";
+import { IMAGE_PATH_PREFIX } from "@/lib/constant";
 import { Plu } from "@/entity/plu";
 import { memo } from "react";
 

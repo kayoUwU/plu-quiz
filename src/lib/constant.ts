@@ -14,6 +14,8 @@ export const LOGO = logoPic;
 export const BASE_PATH = process?.env?.NEXT_PUBLIC_BASE_PATH || "";
 export const SITE_BASE_URL = process?.env?.NEXT_PUBLIC_SITE_BASE_URL || "";
 
+export const IMAGE_PATH_PREFIX = BASE_PATH.concat("/plu_img/");
+
 export const LINKS: NavLink[] = [
   {
     key: "quiz",

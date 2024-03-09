@@ -99,7 +99,7 @@ const QuizPage = function Page() {
       setQuestions(questions.toSpliced(currentQuestionIndex, 1));
       answeredDispatch({
         type: ANSWERED_DISPATCH_ACTION.RESULT,
-        payload: answer,
+        payload: [answer],
       });
     }
     if (currentQuestion != null) {
@@ -127,7 +127,7 @@ const QuizPage = function Page() {
       setQuestions((item) => item.toSpliced(currentQuestionIndex, 1));
       answeredDispatch({
         type: ANSWERED_DISPATCH_ACTION.RESULT,
-        payload: answer,
+        payload: [answer],
       });
       setCurrentQuestion(answer);
       setCurrentQuestionIndex(-1);
