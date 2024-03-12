@@ -38,15 +38,19 @@ const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
 const ALL_CACHES = [cacheNames.precache, PAGE_CACHE_NAME, IMAGE_CACHE_NAME, STATIC_CACHE_NAME, OTHER_CACHE_NAME, cacheNames.runtime, cacheNames.googleAnalytics,]
 
 const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
-const PRECACHE_FALBACK = ['/offline', '/favicon.ico'];
+const FALLBACK_HTML_URL = '/offline';
+const FALLBACK_IMAGE_URL = '/favicon.ico';
+const PRECACHE_FALBACK = [FALLBACK_HTML_URL, FALLBACK_IMAGE_URL]; // cacheNames.runtime
 const FALBACK_STRATEGY = new CacheFirst();
 
-const BASE_URL = self.registration.scope==='/'?'': self.registration.scope||''; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
+const BASE_URL = (self.registration.scope.split("/",4).length === 4 && self.registration.scope.split("/",4) === '') ? 
+'' : self.registration.scope || ''; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
 console.log("Service worker scope ", self.registration.scope);
 
 // Optional: use the injectManifest mode of one of the Workbox
 // build tools to precache a list of URLs, including fallbacks.
-precacheAndRoute(self.__WB_MANIFEST);
+const PRECACHE_ASSETS = self.__WB_MANIFEST || []; // e.g. {"revision":"eefb6e99af8289232aa3739e6b921d6a","url":"/favicon.ico"}
+precacheAndRoute(PRECACHE_ASSETS);
 
 console.log("PRECACHE_FALBACK", PRECACHE_FALBACK);
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
@@ -124,6 +128,18 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// Handle precache inject from workbox
+const precacheRoute = new Route(({ url, sameOrigin }) => {
+  return sameOrigin && PRECACHE_ASSETS.findIndex(item => item.url.includes(url.pathname)) == true;
+}, new CacheFirst({
+  cacheName: cacheNames.precache,
+  matchOptions: {
+    ignoreMethod: true,
+    ignoreVary: true,
+    ignoreSearch: true,
+  }
+}));
+
 
 // Handle plu images:
 const imageRoute = new Route(({ request, url, sameOrigin }) => {
@@ -136,6 +152,13 @@ const imageRoute = new Route(({ request, url, sameOrigin }) => {
     new ExpirationPlugin({
       maxAgeSeconds: SEC_3MONTH,
     }),
+    {
+      handlerDidError: async () => {
+        return await caches.match(FALLBACK_IMAGE_URL, {
+          cacheName: cacheNames.runtime,
+        }) || Response.error();
+      },
+    },
   ],
   matchOptions: {
     ignoreMethod: true,
@@ -148,8 +171,8 @@ const imageRoute = new Route(({ request, url, sameOrigin }) => {
 const webPageRoute = new Route(({ request, url, sameOrigin }) => {
   return sameOrigin && (request.destination === 'document' ||
     //dev: http://localhost:3000/about?_rsc=1me0c
-    //prod: https://kayouwu.github.io/plu-quiz/home.txt?_rsc=re8ab
-    PRECACHE_PAGES.some(item => url.pathname.includes(item))
+    //prod: https://kayouwu.github.io/plu-quiz/home.txt?_rsc=re8ab (differnt Link refer to same txt with differnt search param)
+    PRECACHE_PAGES.some(item => request.url.includes(item.concat('?')) || url.pathname.includes(item.concat('.txt')))
   );
 }, new StaleWhileRevalidate({
   cacheName: PAGE_CACHE_NAME,
@@ -161,7 +184,7 @@ const webPageRoute = new Route(({ request, url, sameOrigin }) => {
     {
       handlerDidError: async () => {
         return await caches.match(FALLBACK_HTML_URL, {
-          cacheName: SW_VERSION,
+          cacheName: cacheNames.runtime,
         }) || Response.error();
       },
     },
@@ -180,8 +203,7 @@ const staticAssetRoute = new Route(({ request, sameOrigin }) => {
   networkTimeoutSeconds: networkTimeoutSeconds_StaleWhileRevalidate,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 50,
-      maxAgeSeconds: SEC_30DAY,
+      maxEntries: 20,
     })
   ],
   matchOptions: {
@@ -193,8 +215,7 @@ const staticAssetRoute = new Route(({ request, sameOrigin }) => {
 
 // default
 const defaultRoute = new Route(({ request, url, sameOrigin }) => {
-  console.log("defaultRoute request", request);
-  console.log("url", url);
+  console.log("defaultRoute request:", request, ";url:", url);
   return sameOrigin;
 }, new NetworkFirst({
   cacheName: OTHER_CACHE_NAME,
@@ -214,6 +235,7 @@ const defaultRoute = new Route(({ request, url, sameOrigin }) => {
 
 
 // Register the new route
+registerRoute(precacheRoute);
 registerRoute(imageRoute);
 registerRoute(webPageRoute);
 registerRoute(staticAssetRoute);
@@ -227,33 +249,27 @@ setDefaultHandler(NetworkOnly);
 // generate a response.
 setCatchHandler(async ({ request, url, sameOrigin }) => {
   console.log("setCatchHandler", url);
-  // if (sameOrigin) {
-  // /_next/image?url=%2Fplu_img%2Fcabbage.webp&w=640&q=75
-  //   const path = url.pathname.split('?', 2);
-  //   if (path.length == 2) {
-  //     const query = path[1].split('=', 2);
-  //     if (query.length == 2) {
-  //       const image = query[1];
-  //       console.log("path", path, "precaching", precaching.getCacheKeyForURL(image));
-  //       if (precaching.getCacheKeyForURL(image)) {
-  //         return matchPrecache(image);
-  //       }
-  //     }
-  //   }
-  // }
 
   // Fallback assets are precached when the service worker is installed, and are
   // served in the event of an error below. Use `event`, `request`, and `url` to
   // figure out how to respond, or use request.destination to match requests for
   // specific resource types.
   switch (request.destination) {
-    case 'document':
+    case 'document': {
       // FALLBACK_HTML_URL must be defined as a precached URL for this to work:
-      return matchPrecache(BASE_URL.concat(FALLBACK_HTML_URL));
+      const resp = await caches.match(FALLBACK_HTML_URL, {
+        cacheName: cacheNames.runtime,
+      });
+      return resp || Response.error();
+    }
 
-    case 'image':
+    case 'image': {
       // FALLBACK_IMAGE_URL must be defined as a precached URL for this to work:
-      return matchPrecache(BASE_URL.concat(FALLBACK_IMAGE_URL));
+      const resp = await caches.match(FALLBACK_IMAGE_URL, {
+        cacheName: cacheNames.runtime,
+      });
+      return resp || Response.error();
+    }
 
     default:
       // If we don't have a fallback, return an error response.

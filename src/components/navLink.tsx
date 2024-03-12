@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import { AUTHOR, LINKS, WEB_ICON, INDEX_PAGE } from "@/lib/constant";
 
@@ -13,7 +13,7 @@ const FOCUS_COLOR = "bg-orange-700";
 const SECOND_COLOR = "bg-orange-900";
 const ICON_STYLE = `relative flex rounded-full text-white ring-2 ring-black hover:ring-2 hover:ring-white hover:ring-offset-2 hover:ring-offset-gray-800 hover:${FOCUS_COLOR}`;
 
-export default function NavLinks() {
+function NavLink() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -142,3 +142,5 @@ export default function NavLinks() {
     </nav>
   );
 }
+
+export default memo(NavLink);

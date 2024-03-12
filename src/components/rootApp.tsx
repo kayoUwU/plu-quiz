@@ -2,9 +2,10 @@
 
 import { ReactNode, useEffect } from "react";
 
-import { registerSWwithWorkbox } from "@/lib/servicesWorker";
+import useSWwithWorkbox from "@/lib/servicesWorker";
 
 export default function RootApp({ children }: { children: ReactNode }) {
+  const [registerSWwithWorkbox] = useSWwithWorkbox();
   useEffect(() => {
     registerSWwithWorkbox().catch((e) => {
       console.warn("fail to register services worker:", e);
