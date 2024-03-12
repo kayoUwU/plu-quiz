@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 
-import {AUTHOR, BASE_PATH, LINKS, LOGO} from '@/lib/constant';
+import {AUTHOR, LINKS, WEB_ICON,INDEX_PAGE} from '@/lib/constant';
 
 const MAIN_COLOR = 'bg-orange-500';
 const MAIN_SHADOW_COLOR = 'shadow-orange-500/50'
@@ -45,11 +45,13 @@ export default function NavLinks() {
             </button>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <Link className="flex flex-shrink-0 items-center" href='/'>
+            <Link className="flex flex-shrink-0 items-center" href={INDEX_PAGE}>
               <Image
                 className="h-8 w-8"
-                src={LOGO}
+                src={WEB_ICON}
                 alt="PLU Quiz"
+                width={8}
+                height={8}
               />
             </Link>
             <div className="hidden sm:ml-6 sm:block">

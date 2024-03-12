@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 
 import "@/ui/globals.css";
 import { DEFAULT_FONT } from "@/ui/fonts";
-import { SITE_BASE_URL, BASE_PATH } from "@/lib/constant";
+import { SITE_BASE_URL, BASE_PATH, WEB_ICON } from "@/lib/constant";
 import { AppProvider } from "@/data/store/appProvider";
+import RootApp from "@/components/rootApp";
 
 export const metadata: Metadata = {
   title: "PLU code Quiz",
@@ -17,9 +18,10 @@ export const metadata: Metadata = {
     siteName: "PLU code Quiz",
   },
   icons: {
-    icon: BASE_PATH.concat("/favicon.ico"),
+    icon: WEB_ICON,
   },
   metadataBase: new URL(SITE_BASE_URL),
+  manifest: BASE_PATH.concat("/manifest.json"),
 };
 
 export default function RootLayout({
@@ -32,7 +34,9 @@ export default function RootLayout({
       <body
         className={`${DEFAULT_FONT.className} antialiased bg-gradient-to-b from-orange-500 to-red-500`}
       >
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <RootApp>{children}</RootApp>
+        </AppProvider>
       </body>
     </html>
   );

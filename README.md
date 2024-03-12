@@ -41,7 +41,7 @@ The page auto-updates as you edit the file.
 
 build and server static:
 ```
-yarn run build
+yarn build
 npx serve@latest out
 ```
 
@@ -50,8 +50,9 @@ npx serve@latest out
 - pass github page url (i.e. `https://kayouwu.github.io/plu-quiz`) to environment vaiable `WEB_URL` in `production` enviorment settings
 
 ## Dependencies
-- [Tailwind CSS](https://tailwindcss.com/) as css style
+- [Tailwind CSS](https://tailwindcss.com/) as css style.
 - This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load a custom Google Font.
+- [Workbox](https://developer.chrome.com/docs/workbox/using-plugins) for Progressive Web Apps.
 
 ## Learn More
 Src Folder structure:

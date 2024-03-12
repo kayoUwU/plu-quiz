@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { memo } from "react";
 
 import { AUTHOR, LOGO, LINKS } from "@/lib/constant";
 import DescriptionButton from "@/components/descriptionButton";
 
-export default function Page() {
+function Home() {
   return (
     <main className="flex h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -60,11 +61,11 @@ export default function Page() {
           description="Review PLU Code Specifications."
           renderElement={(className: string, children: JSX.Element) => (
             <a
-            href="https://www.ifpsglobal.com/plu-codes-search"
-            className={className}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+              href="https://www.ifpsglobal.com/plu-codes-search"
+              className={className}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {children}
             </a>
           )}
@@ -73,3 +74,5 @@ export default function Page() {
     </main>
   );
 }
+
+export default memo(Home);
