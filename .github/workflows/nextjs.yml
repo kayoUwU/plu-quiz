@@ -94,8 +94,12 @@ jobs:
           ${{ steps.detect-package-manager.outputs.runner }} run build:uat
           pwd
           ls -al
+          echo 'public'
+          ls public -al
           echo '.next'
           ls .next -al
+          echo '.next/public'
+          ls '.next/public' -al
           echo 'out'
           ls out -al
       - name: Upload artifact

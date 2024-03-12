@@ -6,6 +6,7 @@ const excludePublic = ['sw.js'];
 
 module.exports = (options) => {
   const { buildId, dev } = options;
+  console.log("buildId=",buildId, "; dev=",dev);
   if (!dev) {
     const swConfig = {
       dontCacheBustURLsMatching: /^\/_next\/static\/.*/i,
@@ -29,7 +30,7 @@ module.exports = (options) => {
           url: `/${f}`,
           revision: buildId,
         })),
-      swDest: './public/sw.js',
+      swDest: 'sw.js',
       swSrc: './internal/workbox/sw.js',
       modifyURLPrefix: {
         '': '_next',

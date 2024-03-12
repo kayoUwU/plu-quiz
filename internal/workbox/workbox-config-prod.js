@@ -11,7 +11,7 @@ module.exports = {
     //'plu-public-img/plu_img/*.webp',
   ],
   globIgnores: ['.next/static/**/_buildManifest.js', '.next/static/**/_ssgManifest.js'],
-  swDest: 'public/sw.js',
+  swDest: 'out/sw.js',
   swSrc: './internal/workbox/sw.js',
   modifyURLPrefix: {
     '.next': '_next',
