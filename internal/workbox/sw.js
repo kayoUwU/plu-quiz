@@ -58,7 +58,7 @@ self.addEventListener('install', (event) => {
     caches
       .open(PAGE_CACHE_NAME)
       .then((cache) =>
-        cache.addAll(PRECACHE_PAGES))
+        cache.addAll(PRECACHE_PAGES)
       )
       .catch((err) => {
         console.log('Service worker install: cant cache file', err);
