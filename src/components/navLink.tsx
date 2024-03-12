@@ -5,12 +5,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 
-import {AUTHOR, LINKS, WEB_ICON,INDEX_PAGE} from '@/lib/constant';
+import { AUTHOR, LINKS, WEB_ICON, INDEX_PAGE } from "@/lib/constant";
 
-const MAIN_COLOR = 'bg-orange-500';
-const MAIN_SHADOW_COLOR = 'shadow-orange-500/50'
-const FOCUS_COLOR = 'bg-orange-700';
-const SECOND_COLOR = 'bg-orange-900';
+const MAIN_COLOR = "bg-orange-500";
+const MAIN_SHADOW_COLOR = "shadow-orange-500/50";
+const FOCUS_COLOR = "bg-orange-700";
+const SECOND_COLOR = "bg-orange-900";
 const ICON_STYLE = `relative flex rounded-full text-white ring-2 ring-black hover:ring-2 hover:ring-white hover:ring-offset-2 hover:ring-offset-gray-800 hover:${FOCUS_COLOR}`;
 
 export default function NavLinks() {
@@ -34,11 +34,17 @@ export default function NavLinks() {
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
-                <div className="block h-6 w-6 font-bond text-xl" aria-hidden="true">
+                <div
+                  className="block h-6 w-6 font-bond text-xl"
+                  aria-hidden="true"
+                >
                   ˄
                 </div>
               ) : (
-                <div className="block h-6 w-6 font-bond text-xl" aria-hidden="true">
+                <div
+                  className="block h-6 w-6 font-bond text-xl"
+                  aria-hidden="true"
+                >
                   ˅
                 </div>
               )}
@@ -89,7 +95,8 @@ export default function NavLinks() {
 
             <div className="relative ml-3">
               <div>
-                <a className={ICON_STYLE}
+                <a
+                  className={ICON_STYLE}
                   href={AUTHOR.link}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -100,6 +107,8 @@ export default function NavLinks() {
                     className="h-8 w-8 rounded-full"
                     src={AUTHOR.icon}
                     alt={AUTHOR.name}
+                    width={50}
+                    height={50}
                   />
                 </a>
               </div>

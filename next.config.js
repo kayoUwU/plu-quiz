@@ -4,25 +4,8 @@ const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/const
 const CopyPlugin = require("copy-webpack-plugin");
 const SW = require('./internal/workbox/workbox-webpack');
 
-const plugins = (_options) => [
-    new CopyPlugin({
-        patterns: [
-            { from: "plu-public-img/plu_img", to: "public/plu_img" },
-        ],
-    }),
-    SW(_options),
-];
-
 // for common settings
 const nextConfig = {
-    webpack: (_config, _options) => {
-        plugins(_options).forEach(item => {
-            if (item) {
-                _config.plugins.push(item);
-            }
-        });
-        return _config;
-    }
 };
 module.exports = (phase, { defaultConfig }) => {
     console.log("phase", phase);
@@ -60,6 +43,14 @@ module.exports = (phase, { defaultConfig }) => {
     }
 
     // for production
+    const plugins = (_options) => [
+        new CopyPlugin({
+            patterns: [
+                { from: "plu-public-img/plu_img", to: "public/plu_img" },
+            ],
+        }),
+        SW(_options),
+    ];
 
     const config = {
         ...nextConfig,
@@ -68,6 +59,14 @@ module.exports = (phase, { defaultConfig }) => {
         // experimental: { images: { unoptimized: true } },
         output: 'export',
         distDir: 'out',
+        webpack: (_config, _options) => {
+            plugins(_options).forEach(item => {
+                if (item) {
+                    _config.plugins.push(item);
+                }
+            });
+            return _config;
+        }
     };
 
     // for static assets path

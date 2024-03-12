@@ -25,51 +25,54 @@ setCacheNameDetails({
 });
 
 const SEC_30DAY = 24 * 60 * 60;
+const SEC_3MONTH = 24 * 60 * 60 * 3;
 
 const networkTimeoutSeconds_StaleWhileRevalidate = 2;
 const networkTimeoutSeconds_NetworkFirst = 2;
 
 const CACHE_SUFFIX = cacheNames.suffix;
 const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
-const IMAGE_CACHE_NAME = cacheNames.precache; //SW_VERSION.concat('_images');
+const IMAGE_CACHE_NAME = SW_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
+const ALL_CACHES = [cacheNames.precache, PAGE_CACHE_NAME, IMAGE_CACHE_NAME, STATIC_CACHE_NAME, OTHER_CACHE_NAME, cacheNames.runtime, cacheNames.googleAnalytics,]
+
 const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
-const PRECACHE_FALBACK = ['/offline','/favicon.ico'];
+const PRECACHE_FALBACK = ['/offline', '/favicon.ico'];
 const FALBACK_STRATEGY = new CacheFirst();
 
-const BASE_URL = self.registration.scope || ""; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
-console.log("Service worker scope ",self.registration.scope);
+const BASE_URL = self.registration.scope==='/'?'': self.registration.scope||''; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
+console.log("Service worker scope ", self.registration.scope);
 
 // Optional: use the injectManifest mode of one of the Workbox
 // build tools to precache a list of URLs, including fallbacks.
 precacheAndRoute(self.__WB_MANIFEST);
 
-console.log("PRECACHE_FALBACK",PRECACHE_FALBACK);
+console.log("PRECACHE_FALBACK", PRECACHE_FALBACK);
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
 warmStrategyCache({ urls: PRECACHE_FALBACK, strategy: FALBACK_STRATEGY });
 
 self.addEventListener('install', (event) => {
   // succeeds parse the service worker file
   console.log('Service worker installing: ', SW_VERSION);
-  console.log("PRECACHE_PAGES",PRECACHE_PAGES);
+  console.log("PRECACHE_PAGES", PRECACHE_PAGES);
 
   event.waitUntil(
     caches
-    .open(cacheNames.precache)
-    .then((cache) =>
-      cache.addAll(PRECACHE_FALBACK.map(item=>BASE_URL.concat(item)))
-    )
-    .catch((err) => {
-      console.log('Service worker install: cant cache file', err);
-    })
+      .open(cacheNames.precache)
+      .then((cache) =>
+        cache.addAll(PRECACHE_FALBACK.map(item => BASE_URL.concat(item)))
+      )
+      .catch((err) => {
+        console.log('Service worker install: cant cache file', err);
+      })
   )
 
   event.waitUntil(
     caches
       .open(PAGE_CACHE_NAME)
       .then((cache) =>
-        cache.addAll(PRECACHE_PAGES.map(item=>BASE_URL.concat(item)))
+        cache.addAll(PRECACHE_PAGES.map(item => BASE_URL.concat(item)))
       )
       .catch((err) => {
         console.log('Service worker install: cant cache file', err);
@@ -89,7 +92,7 @@ self.addEventListener('activate', (event) => {
       .then((keyList) =>
         Promise.all(
           keyList.map((key) => {
-            if (!(key.includes(SW_VERSION))) {
+            if (!(ALL_CACHES.includes(key))) {
               console.log('delete cache: ', key);
               return caches.delete(key);
             }
@@ -123,14 +126,15 @@ self.addEventListener('message', (event) => {
 
 
 // Handle plu images:
-const imageRoute = new Route(({ request, url }) => {
-  // /_next/image?url=https%3A%2F%2Fraw.githubusercontent.com%2FkayoUwU%2Fplu-public-img%2Fmaster%2Fplu_img%2Fcabbage.webp&w=48&q=75
-  return request.destination === 'image' && (url.href.includes("plu_img"));
+const imageRoute = new Route(({ request, url, sameOrigin }) => {
+  // dev: /_next/image?url=https%3A%2F%2Fraw.githubusercontent.com%2FkayoUwU%2Fplu-public-img%2Fmaster%2Fplu_img%2Fcabbage.webp&w=48&q=75
+  // prod: https://kayouwu.github.io/plu-quiz/plu_img/potato_sweet.webp
+  return request.destination === 'image' && sameOrigin && (url.pathname.includes("plu_img") || url.search.includes("plu_img"));
 }, new CacheFirst({
   cacheName: IMAGE_CACHE_NAME,
   plugins: [
     new ExpirationPlugin({
-      maxAgeSeconds: SEC_30DAY,
+      maxAgeSeconds: SEC_3MONTH,
     }),
   ],
   matchOptions: {
@@ -141,14 +145,18 @@ const imageRoute = new Route(({ request, url }) => {
 }));
 
 // Handle nextjs pages:
-const webPageRoute = new Route(({ request, sameOrigin }) => {
-  return sameOrigin && request.destination === 'document';
+const webPageRoute = new Route(({ request, url, sameOrigin }) => {
+  return sameOrigin && (request.destination === 'document' ||
+    //dev: http://localhost:3000/about?_rsc=1me0c
+    //prod: https://kayouwu.github.io/plu-quiz/home.txt?_rsc=re8ab
+    PRECACHE_PAGES.some(item => url.pathname.includes(item))
+  );
 }, new StaleWhileRevalidate({
   cacheName: PAGE_CACHE_NAME,
   networkTimeoutSeconds: networkTimeoutSeconds_StaleWhileRevalidate,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 10,
+      maxEntries: 20,
     }),
     {
       handlerDidError: async () => {
@@ -172,7 +180,7 @@ const staticAssetRoute = new Route(({ request, sameOrigin }) => {
   networkTimeoutSeconds: networkTimeoutSeconds_StaleWhileRevalidate,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 30,
+      maxEntries: 50,
       maxAgeSeconds: SEC_30DAY,
     })
   ],
@@ -190,10 +198,10 @@ const defaultRoute = new Route(({ request, url, sameOrigin }) => {
   return sameOrigin;
 }, new NetworkFirst({
   cacheName: OTHER_CACHE_NAME,
-  networkTimeoutSeconds:networkTimeoutSeconds_NetworkFirst,
+  networkTimeoutSeconds: networkTimeoutSeconds_NetworkFirst,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 30,
+      maxEntries: 20,
       maxAgeSeconds: SEC_30DAY,
     })
   ],
@@ -220,7 +228,7 @@ setDefaultHandler(NetworkOnly);
 setCatchHandler(async ({ request, url, sameOrigin }) => {
   console.log("setCatchHandler", url);
   // if (sameOrigin) {
-    // /_next/image?url=%2Fplu_img%2Fcabbage.webp&w=640&q=75
+  // /_next/image?url=%2Fplu_img%2Fcabbage.webp&w=640&q=75
   //   const path = url.pathname.split('?', 2);
   //   if (path.length == 2) {
   //     const query = path[1].split('=', 2);
