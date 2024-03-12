@@ -29,7 +29,7 @@ module.exports = (options) => {
         })
         .filter((f) => !excludePublic.includes(f))
         .map((f) => ({
-          url: `/${f}`,
+          url: basePath.concat(`/${f}`),
           revision: buildId,
         })),
       swDest: 'public/sw.js',

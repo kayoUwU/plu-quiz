@@ -8,7 +8,7 @@
 // import { warmStrategyCache } from 'workbox-recipes';
 // import { matchPrecache, precacheAndRoute, precaching } from 'workbox-precaching';
 // // import {BackgroundSyncPlugin} from 'workbox-background-sync'; // queue up failed requests and retry them when future sync events fire
-// import { cacheNames, setCacheNameDetails } from 'workbox-core';
+import { cacheNames, setCacheNameDetails } from 'workbox-core';
 
 self.importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
 const { registerRoute, Route, setDefaultHandler, setCatchHandler } = workbox.routing;
@@ -16,7 +16,7 @@ const { CacheFirst, StaleWhileRevalidate, NetworkOnly, NetworkFirst } = workbox.
 const { ExpirationPlugin } = workbox.expiration;
 const { warmStrategyCache } = workbox.recipes;
 const { matchPrecache, precacheAndRoute, precaching } = workbox.precaching;
-const { cacheNames, setCacheNameDetails } = workbox.core;
+// const { cacheNames, setCacheNameDetails } = workbox.core;
 
 
 const SW_VERSION = 'plu-quiz-1.0.0';
@@ -34,8 +34,8 @@ const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
 const IMAGE_CACHE_NAME = cacheNames.precache; //SW_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
-const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'].map(item=>BASE_URL.concat(item));
-const PRECACHE_FALBACK = ['/offline','/favicon.ico'].map(item=>BASE_URL.concat(item));
+const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
+const PRECACHE_FALBACK = ['/offline','/favicon.ico'];
 const FALBACK_STRATEGY = new CacheFirst();
 
 const BASE_URL = self.registration.scope || ""; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
@@ -56,9 +56,20 @@ self.addEventListener('install', (event) => {
 
   event.waitUntil(
     caches
+    .open(cacheNames.precache)
+    .then((cache) =>
+      cache.addAll(PRECACHE_FALBACK.map(item=>BASE_URL.concat(item)))
+    )
+    .catch((err) => {
+      console.log('Service worker install: cant cache file', err);
+    })
+  )
+
+  event.waitUntil(
+    caches
       .open(PAGE_CACHE_NAME)
       .then((cache) =>
-        cache.addAll(PRECACHE_PAGES)
+        cache.addAll(PRECACHE_PAGES.map(item=>BASE_URL.concat(item)))
       )
       .catch((err) => {
         console.log('Service worker install: cant cache file', err);
@@ -210,18 +221,18 @@ setCatchHandler(async ({ request, url, sameOrigin }) => {
   console.log("setCatchHandler", url);
   if (sameOrigin) {
     // /_next/image?url=%2Fplu_img%2Fcabbage.webp&w=640&q=75
-    const path = url.pathname.split('?', 2);
-    if (path.length == 2) {
-      const query = path[1].split('=', 2);
-      if (query.length == 2) {
-        const image = query[1];
-        console.log("path", path, "precaching", precaching.getCacheKeyForURL(image));
-        if (precaching.getCacheKeyForURL(image)) {
-          return matchPrecache(image);
-        }
-      }
-    }
-  }
+  //   const path = url.pathname.split('?', 2);
+  //   if (path.length == 2) {
+  //     const query = path[1].split('=', 2);
+  //     if (query.length == 2) {
+  //       const image = query[1];
+  //       console.log("path", path, "precaching", precaching.getCacheKeyForURL(image));
+  //       if (precaching.getCacheKeyForURL(image)) {
+  //         return matchPrecache(image);
+  //       }
+  //     }
+  //   }
+  // }
 
   // Fallback assets are precached when the service worker is installed, and are
   // served in the event of an error below. Use `event`, `request`, and `url` to
@@ -230,11 +241,11 @@ setCatchHandler(async ({ request, url, sameOrigin }) => {
   switch (request.destination) {
     case 'document':
       // FALLBACK_HTML_URL must be defined as a precached URL for this to work:
-      return matchPrecache(FALLBACK_HTML_URL);
+      return matchPrecache(BASE_URL.concat(FALLBACK_HTML_URL));
 
     case 'image':
       // FALLBACK_IMAGE_URL must be defined as a precached URL for this to work:
-      return matchPrecache(FALLBACK_IMAGE_URL);
+      return matchPrecache(BASE_URL.concat(FALLBACK_IMAGE_URL));
 
     default:
       // If we don't have a fallback, return an error response.
