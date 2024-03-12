@@ -29,41 +29,40 @@ const SEC_30DAY = 24 * 60 * 60;
 const networkTimeoutSeconds_StaleWhileRevalidate = 2;
 const networkTimeoutSeconds_NetworkFirst = 2;
 
-const FALLBACK_HTML_URL = '/offline';
-const FALLBACK_IMAGE_URL = '/favicon.ico';
-const FALBACK_STRATEGY = new CacheFirst();
-
 const CACHE_SUFFIX = cacheNames.suffix;
 const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
 const IMAGE_CACHE_NAME = cacheNames.precache; //SW_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
-const PRECACHE_PAGES = [];//['/home', '/quiz', '/revision', '/about'];
+const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
+const PRECACHE_FALBACK = ['/offline','/favicon.ico'];
+const FALBACK_STRATEGY = new CacheFirst();
 
+const BASE_URL = self.registration.scope || ""; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
+console.log("Service worker scope ",self.registration.scope);
 
 // Optional: use the injectManifest mode of one of the Workbox
 // build tools to precache a list of URLs, including fallbacks.
 precacheAndRoute(self.__WB_MANIFEST);
 
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
-warmStrategyCache({ urls: [FALLBACK_HTML_URL, FALLBACK_IMAGE_URL], strategy: FALBACK_STRATEGY });
+warmStrategyCache({ urls: PRECACHE_FALBACK.map(item=>BASE_URL.concat(item)), strategy: FALBACK_STRATEGY });
 
 self.addEventListener('install', (event) => {
   // succeeds parse the service worker file
-  console.log('installing Service worker: ', SW_VERSION);
+  console.log('Service worker installing: ', SW_VERSION);
 
-  // event.waitUntil(
-  //   caches
-  //     .open(PAGE_CACHE_NAME)
-  //     .then((cache) =>
-  //       cache.addAll(PRECACHE_PAGES)
-  //     )
-  //     .catch((err) => {
-  //       console.log('cant cache file', err);
-  //     })
-  // );
-  console.log("ServiceWorkerRegistration.scope ",ServiceWorkerRegistration?.scope);
-  console.log("self ",self);
+  event.waitUntil(
+    caches
+      .open(PAGE_CACHE_NAME)
+      .then((cache) =>
+        cache.addAll(PRECACHE_PAGES.map(item=>BASE_URL.concat(item)))
+      )
+      .catch((err) => {
+        console.log('Service worker install: cant cache file', err);
+      })
+  );
+  // console.log("self ",self);
 });
 
 self.addEventListener('activate', (event) => {
@@ -104,7 +103,7 @@ self.addEventListener('message', (event) => {
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     // Force the waiting service worker to become the active service worker.
-    console.log('Service worker skipWaiting');
+    console.log('message: Service worker skipWaiting');
     self.skipWaiting();
   }
 });
