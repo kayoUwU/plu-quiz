@@ -48,6 +48,7 @@ npx serve@latest out
 ## Github Action setting
 - pass github page base path (i.e. `/plu-quiz`) to environment vaiable `WEB_BASE_PATH` in `production` enviorment settings
 - pass github page url (i.e. `https://kayouwu.github.io/plu-quiz`) to environment vaiable `WEB_URL` in `production` enviorment settings
+- pass the image server path to (i.e. `/plu-quiz`) to environment vaiable `IMAGE_PATH` in `production` enviorment settings
 
 ## Dependencies
 - [Tailwind CSS](https://tailwindcss.com/) as css style.

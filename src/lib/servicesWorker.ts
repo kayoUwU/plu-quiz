@@ -1,10 +1,12 @@
 import { WorkboxLifecycleWaitingEvent } from "workbox-window";
 
+import {BASE_PATH} from "@/lib/constant";
+
 export async function registerSWwithWorkbox() {
   if ("serviceWorker" in navigator) {
     const { Workbox } = await import("workbox-window");
 
-    const wb = new Workbox("/sw.js");
+    const wb = new Workbox(BASE_PATH.concat("/sw.js"));
 
     const showSkipWaitingPrompt = async (
       event: WorkboxLifecycleWaitingEvent
