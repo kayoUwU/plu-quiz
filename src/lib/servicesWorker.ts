@@ -36,9 +36,9 @@ export async function registerSWwithWorkbox() {
     wb.addEventListener("installed", (event) => {
       if (!event.isUpdate) {
         // First-installed code goes here...
-        console.log("serviceWorker installing for the first time!");
+        console.log("serviceWorker installed for the first time!");
       } else {
-        console.log("serviceWorker installing");
+        console.log("serviceWorker installed");
       }
     });
 

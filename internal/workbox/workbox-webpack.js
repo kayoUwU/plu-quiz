@@ -6,6 +6,8 @@ const excludePublic = ['sw.js'];
 
 module.exports = (options) => {
   const { buildId, dev } = options;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  console.log("process.env.NEXT_PUBLIC_BASE_PATH",process.env.NEXT_PUBLIC_BASE_PATH);
   console.log("buildId=",buildId, "; dev=",dev);
   if (!dev) {
     const swConfig = {
@@ -33,11 +35,12 @@ module.exports = (options) => {
       swDest: 'sw.js',
       swSrc: './internal/workbox/sw.js',
       modifyURLPrefix: {
-        '': '_next',
-        'public': '',
+        '': basePath.concat('_next'),
+        'public': basePath.concat(''),
       },
       maximumFileSizeToCacheInBytes: 9000000,
     };
+    console.log('swConfig:',swConfig);
 
     return new InjectManifest(swConfig);
   }

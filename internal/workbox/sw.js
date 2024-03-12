@@ -38,7 +38,7 @@ const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
 const IMAGE_CACHE_NAME = SW_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
-const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
+const PRECACHE_PAGES = [];//['/home', '/quiz', '/revision', '/about'];
 
 
 // Optional: use the injectManifest mode of one of the Workbox
@@ -52,16 +52,16 @@ self.addEventListener('install', (event) => {
   // succeeds parse the service worker file
   console.log('installing Service worker: ', SW_VERSION);
 
-  event.waitUntil(
-    caches
-      .open(PAGE_CACHE_NAME)
-      .then((cache) =>
-        cache.addAll(PRECACHE_PAGES)
-      )
-      .catch((err) => {
-        console.log('cant cache file', err);
-      })
-  );
+  // event.waitUntil(
+  //   caches
+  //     .open(PAGE_CACHE_NAME)
+  //     .then((cache) =>
+  //       cache.addAll(PRECACHE_PAGES)
+  //     )
+  //     .catch((err) => {
+  //       console.log('cant cache file', err);
+  //     })
+  // );
 });
 
 self.addEventListener('activate', (event) => {

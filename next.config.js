@@ -76,11 +76,6 @@ module.exports = (phase, { defaultConfig }) => {
     // for next js path
     if (process.env.NEXT_PUBLIC_BASE_PATH && process.env.NEXT_PUBLIC_BASE_PATH.trim() !== '') {
         config.basePath = process.env.NEXT_PUBLIC_BASE_PATH;
-        // env.NEXT_PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH;
-    }
-
-    if (process.env.NEXT_PUBLIC_SITE_BASE_URL && process.env.NEXT_PUBLIC_SITE_BASE_URL.trim() !== '') {
-        // env.NEXT_PUBLIC_SITE_BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
     }
 
     if (Object.keys(env).length != 0) {
