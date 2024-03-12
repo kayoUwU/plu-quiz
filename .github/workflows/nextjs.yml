@@ -80,6 +80,7 @@ jobs:
         env: 
           NEXT_PUBLIC_BASE_PATH: ${{ vars.WEB_BASE_PATH }}
           NEXT_PUBLIC_SITE_BASE_URL: ${{ vars.WEB_URL }}
+          NEXT_PUBLIC_IMAGE_PATH_PREFIX: ${{ vars.IMAGE_PATH }}
         run: |
           pwd
           echo "copy image to public"
@@ -88,12 +89,19 @@ jobs:
           ls -al "public/plu_img"
           echo "NEXT_PUBLIC_BASE_PATH: $NEXT_PUBLIC_BASE_PATH"
           echo "NEXT_PUBLIC_SITE_BASE_URL: $NEXT_PUBLIC_SITE_BASE_URL"
+          echo "NEXT_PUBLIC_IMAGE_PATH_PREFIX: $NEXT_PUBLIC_IMAGE_PATH_PREFIX"
           echo ${{ github.workspace }}
-          ${{ steps.detect-package-manager.outputs.runner }} run build
+          ${{ steps.detect-package-manager.outputs.runner }} run build:uat
           pwd
           ls -al
+          echo 'public'
+          ls public -al
           echo '.next'
           ls .next -al
+          echo '.next/public'
+          ls '.next/public' -al
+          echo "copy .next sw.js to out"
+          cp ./.next/public/sw.js ./out
           echo 'out'
           ls out -al
       - name: Upload artifact
