@@ -1,11 +1,11 @@
 {
     "name": "PLU code Quiz",
     "short_name": "PLU code Quiz",
-    "start_url": "./home",
-    "scope": "/", 
+    "start_url": "${__WB_BASE_PATH}/home",
+    "scope": "${__WB_BASE_PATH}/", 
     "display": "standalone",
     "theme_color": "#000000",
-    "background_color": "#ffffff",
+    "background_color": "#f97316",
     "description": "quiz on entering the PLU code by looking at the picture.",
     "icons": [
       {

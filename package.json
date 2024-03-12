@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node \"./internal/workbox/build-sw.js\" dev && next dev",
-    "build": "next build",
+    "dev": "yarn sw-manifest && yarn sw:dev && next dev",
+    "build": "yarn sw-manifest && next build",
     "start": "next start",
     "serve": "npx serve out",
-    "build:uat": "next build",
+    "build:uat": "yarn sw-manifest && next build",
     "lint": "next lint",
+    "sw-manifest": "node \"./internal/workbox/build-manifest.js\" \"./internal/workbox/manifest.json\" \"public/manifest.json\"",
     "sw:dev": "node \"./internal/workbox/build-sw.js\" dev",
     "sw": "node \"./internal/workbox/build-sw.js\""
   },
