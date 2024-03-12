@@ -100,6 +100,8 @@ jobs:
           ls .next -al
           echo '.next/public'
           ls '.next/public' -al
+          echo "copy .next sw.js to out"
+          cp ./.next/public/sw.js ./out
           echo 'out'
           ls out -al
       - name: Upload artifact
