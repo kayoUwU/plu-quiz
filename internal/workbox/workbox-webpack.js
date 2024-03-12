@@ -15,7 +15,7 @@ module.exports = (options) => {
       include: [
         ({ asset }) => {
           if (asset.name.startsWith('static/')) {
-            // console.log('asset.name', asset.name);
+            console.log('asset.name', asset.name);
             return true;
           }
           return false;

@@ -8,7 +8,7 @@
 // import { warmStrategyCache } from 'workbox-recipes';
 // import { matchPrecache, precacheAndRoute, precaching } from 'workbox-precaching';
 // // import {BackgroundSyncPlugin} from 'workbox-background-sync'; // queue up failed requests and retry them when future sync events fire
-import { cacheNames, setCacheNameDetails } from 'workbox-core';
+// import { cacheNames, setCacheNameDetails } from 'workbox-core';
 
 self.importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
 const { registerRoute, Route, setDefaultHandler, setCatchHandler } = workbox.routing;
@@ -16,7 +16,7 @@ const { CacheFirst, StaleWhileRevalidate, NetworkOnly, NetworkFirst } = workbox.
 const { ExpirationPlugin } = workbox.expiration;
 const { warmStrategyCache } = workbox.recipes;
 const { matchPrecache, precacheAndRoute, precaching } = workbox.precaching;
-// const { cacheNames, setCacheNameDetails } = workbox.core;
+const { cacheNames, setCacheNameDetails } = workbox.core;
 
 
 const SW_VERSION = 'plu-quiz-1.0.0';
@@ -219,7 +219,7 @@ setDefaultHandler(NetworkOnly);
 // generate a response.
 setCatchHandler(async ({ request, url, sameOrigin }) => {
   console.log("setCatchHandler", url);
-  if (sameOrigin) {
+  // if (sameOrigin) {
     // /_next/image?url=%2Fplu_img%2Fcabbage.webp&w=640&q=75
   //   const path = url.pathname.split('?', 2);
   //   if (path.length == 2) {
