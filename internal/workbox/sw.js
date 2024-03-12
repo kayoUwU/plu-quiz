@@ -34,8 +34,8 @@ const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
 const IMAGE_CACHE_NAME = cacheNames.precache; //SW_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
-const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
-const PRECACHE_FALBACK = ['/offline','/favicon.ico'];
+const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'].map(item=>BASE_URL.concat(item));
+const PRECACHE_FALBACK = ['/offline','/favicon.ico'].map(item=>BASE_URL.concat(item));
 const FALBACK_STRATEGY = new CacheFirst();
 
 const BASE_URL = self.registration.scope || ""; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
@@ -45,18 +45,20 @@ console.log("Service worker scope ",self.registration.scope);
 // build tools to precache a list of URLs, including fallbacks.
 precacheAndRoute(self.__WB_MANIFEST);
 
+console.log("PRECACHE_FALBACK",PRECACHE_FALBACK);
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
-warmStrategyCache({ urls: PRECACHE_FALBACK.map(item=>BASE_URL.concat(item)), strategy: FALBACK_STRATEGY });
+warmStrategyCache({ urls: PRECACHE_FALBACK, strategy: FALBACK_STRATEGY });
 
 self.addEventListener('install', (event) => {
   // succeeds parse the service worker file
   console.log('Service worker installing: ', SW_VERSION);
+  console.log("PRECACHE_PAGES",PRECACHE_PAGES);
 
   event.waitUntil(
     caches
       .open(PAGE_CACHE_NAME)
       .then((cache) =>
-        cache.addAll(PRECACHE_PAGES.map(item=>BASE_URL.concat(item)))
+        cache.addAll(PRECACHE_PAGES))
       )
       .catch((err) => {
         console.log('Service worker install: cant cache file', err);

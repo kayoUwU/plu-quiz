@@ -35,7 +35,7 @@ module.exports = (options) => {
       swDest: 'public/sw.js',
       swSrc: './internal/workbox/sw.js',
       modifyURLPrefix: {
-        '': basePath.concat('_next'),
+        //'': basePath.concat('/_next'),
         'public': basePath.concat(''),
       },
       maximumFileSizeToCacheInBytes: 9000000,
