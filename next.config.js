@@ -15,15 +15,6 @@ const plugins = (_options) => [
 
 // for common settings
 const nextConfig = {
-    async redirects() {
-        return [
-            {
-                source: '/',
-                destination: '/home',
-                permanent: true,
-            },
-        ]
-    },
     webpack: (_config, _options) => {
         plugins(_options).forEach(item => {
             if (item) {
@@ -41,6 +32,15 @@ module.exports = (phase, { defaultConfig }) => {
         const config = {
             ...nextConfig,
             /* development only config options here */
+            async redirects() {
+                return [
+                    {
+                        source: '/',
+                        destination: '/home',
+                        permanent: true,
+                    },
+                ]
+            },
         }
 
         if (process.env.REMOTE_IMAGE_hostname) {
