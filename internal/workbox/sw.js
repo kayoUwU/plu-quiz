@@ -1,22 +1,22 @@
 // This code executes in its own worker or thread
 // scope: '/'
 
-// import { registerRoute, Route, setDefaultHandler } from 'workbox-routing';
-// import { CacheFirst, StaleWhileRevalidate, NetworkOnly, NetworkFirst } from 'workbox-strategies';
-// import { ExpirationPlugin } from 'workbox-expiration';
-// // import {offlineFallback} from 'workbox-recipes'; 
-// import { warmStrategyCache } from 'workbox-recipes';
-// import { matchPrecache, precacheAndRoute, precaching } from 'workbox-precaching';
-// // import {BackgroundSyncPlugin} from 'workbox-background-sync'; // queue up failed requests and retry them when future sync events fire
-// import { cacheNames, setCacheNameDetails } from 'workbox-core';
+import { registerRoute, Route, setDefaultHandler } from 'workbox-routing';
+import { CacheFirst, StaleWhileRevalidate, NetworkOnly, NetworkFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
+// import {offlineFallback} from 'workbox-recipes'; 
+import { warmStrategyCache } from 'workbox-recipes';
+import { matchPrecache, precacheAndRoute, precaching } from 'workbox-precaching';
+// import {BackgroundSyncPlugin} from 'workbox-background-sync'; // queue up failed requests and retry them when future sync events fire
+import { cacheNames, setCacheNameDetails } from 'workbox-core';
 
-self.importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
-const { registerRoute, Route, setDefaultHandler, setCatchHandler } = workbox.routing;
-const { CacheFirst, StaleWhileRevalidate, NetworkOnly, NetworkFirst } = workbox.strategies;
-const { ExpirationPlugin } = workbox.expiration;
-const { warmStrategyCache } = workbox.recipes;
-const { matchPrecache, precacheAndRoute, precaching } = workbox.precaching;
-const { cacheNames, setCacheNameDetails } = workbox.core;
+// self.importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
+// const { registerRoute, Route, setDefaultHandler, setCatchHandler } = workbox.routing;
+// const { CacheFirst, StaleWhileRevalidate, NetworkOnly, NetworkFirst } = workbox.strategies;
+// const { ExpirationPlugin } = workbox.expiration;
+// const { warmStrategyCache } = workbox.recipes;
+// const { matchPrecache, precacheAndRoute, precaching } = workbox.precaching;
+// const { cacheNames, setCacheNameDetails } = workbox.core;
 
 
 const SW_VERSION = 'plu-quiz-1.0.0';
@@ -35,7 +35,7 @@ const FALBACK_STRATEGY = new CacheFirst();
 
 const CACHE_SUFFIX = cacheNames.suffix;
 const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
-const IMAGE_CACHE_NAME = SW_VERSION.concat('_images');
+const IMAGE_CACHE_NAME = cacheNames.precache; //SW_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
 const PRECACHE_PAGES = [];//['/home', '/quiz', '/revision', '/about'];
@@ -62,6 +62,8 @@ self.addEventListener('install', (event) => {
   //       console.log('cant cache file', err);
   //     })
   // );
+  console.log("ServiceWorkerRegistration.scope ",ServiceWorkerRegistration?.scope);
+  console.log("self ",self);
 });
 
 self.addEventListener('activate', (event) => {
@@ -85,7 +87,7 @@ self.addEventListener('activate', (event) => {
       .then(() => {
         // Tell the active service worker to take control of the page immediately.
         clients.claim();
-        console.log('update to cache: ', SW_VERSION.concat('_'));
+        console.log('update to cache: ', SW_VERSION.concat('_').concat(CACHE_SUFFIX));
         // window.location.reload();
       })
   );

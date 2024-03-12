@@ -32,7 +32,7 @@ module.exports = (options) => {
           url: `/${f}`,
           revision: buildId,
         })),
-      swDest: 'sw.js',
+      swDest: 'public/sw.js',
       swSrc: './internal/workbox/sw.js',
       modifyURLPrefix: {
         '': basePath.concat('_next'),
