@@ -38,6 +38,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The page auto-updates as you edit the file.
 
+update pwa file in runtime
+```bash
+yarn sw-manifest
+yarn sw:dev
+```
+
+
 
 build and server static:
 ```

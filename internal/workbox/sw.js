@@ -154,14 +154,14 @@ const imageRoute = new Route(({ request, url, sameOrigin }) => {
   cacheName: IMAGE_CACHE_NAME,
   plugins: [
     new ExpirationPlugin({
+      maxEntries: 20, //plu image
+      maxAgeSeconds: SEC_3MONTH,
       // Automatically cleanup if quota is exceeded.
       purgeOnQuotaError: true,
     }),
     {
       handlerDidError: async () => {
-        return await caches.match(FALLBACK_IMAGE_URL, {
-          cacheName: cacheNames.runtime,
-        }) || Response.error();
+        return await matchPrecache(FALLBACK_IMAGE_URL) || Response.error();
       },
     },
   ],
@@ -185,12 +185,11 @@ const webPageRoute = new Route(({ request, url, sameOrigin }) => {
   plugins: [
     new ExpirationPlugin({
       maxEntries: 20,
+      maxAgeSeconds: SEC_3MONTH,
     }),
     // {
     //   handlerDidError: async () => {
-    //     return await caches.match(FALLBACK_HTML_URL, {
-    //       cacheName: cacheNames.runtime,
-    //     }) || Response.error();
+    //     return await matchPrecache(FALLBACK_HTML_URL) || Response.error();
     //   },
     // },
   ],
@@ -209,6 +208,7 @@ const staticAssetRoute = new Route(({ request, sameOrigin }) => {
   plugins: [
     new ExpirationPlugin({
       maxEntries: 20,
+      maxAgeSeconds: SEC_3MONTH,
     })
   ],
   matchOptions: {
@@ -227,7 +227,7 @@ const defaultRoute = new Route(({ request, url, sameOrigin }) => {
   networkTimeoutSeconds: networkTimeoutSeconds_NetworkFirst,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 20,
+      maxEntries: 10,
       maxAgeSeconds: SEC_30DAY,
     })
   ],
@@ -262,17 +262,13 @@ setCatchHandler(async ({ request, url, sameOrigin }) => {
   switch (request.destination) {
     case 'document': {
       // FALLBACK_HTML_URL must be defined as a precached URL for this to work:
-      const resp = await caches.match(FALLBACK_HTML_URL, {
-        cacheName: cacheNames.runtime,
-      });
+      const resp = await matchPrecache(FALLBACK_HTML_URL);
       return resp || Response.error();
     }
 
     case 'image': {
       // FALLBACK_IMAGE_URL must be defined as a precached URL for this to work:
-      const resp = await caches.match(FALLBACK_IMAGE_URL, {
-        cacheName: cacheNames.runtime,
-      });
+      const resp = await matchPrecache(FALLBACK_IMAGE_URL);
       return resp || Response.error();
     }
 
