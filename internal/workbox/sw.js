@@ -59,7 +59,7 @@ self.addEventListener('install', (event) => {
   // succeeds parse the service worker file
   console.log('Service worker installing: ', SW_VERSION);
   const addPrecache = [];
-  PRECACHE_PAGES.forEach(item => addPrecache.push(BASE_URL.concat(item),BASE_URL.concat(item).concat('.txt')));
+  PRECACHE_PAGES.forEach(item => addPrecache.push(BASE_URL.concat(item).concat('.html'),BASE_URL.concat(item).concat('.txt')));
   console.log("add to PAGE_CACHE_NAME:", addPrecache);
 
   event.waitUntil(
