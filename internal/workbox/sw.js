@@ -43,8 +43,7 @@ const FALLBACK_IMAGE_URL = '/favicon.ico';
 const PRECACHE_FALBACK = [FALLBACK_HTML_URL, FALLBACK_IMAGE_URL]; // cacheNames.runtime
 const FALBACK_STRATEGY = new CacheFirst();
 
-const BASE_URL = (self.registration.scope.split("/",4).length === 4 && self.registration.scope.split("/",4) === '') ? 
-'' : self.registration.scope || ''; //"https://kayouwu.github.io/plu-quiz/".split("://")[1].split('/').splice(1).join('/')
+const BASE_URL = self.registration.scope.slice(-1) === '/' ? self.registration.scope.slice(0, -1) : self.registration.scope; //"https://kayouwu.github.io/plu-quiz/"
 console.log("Service worker scope ", self.registration.scope);
 
 // Optional: use the injectManifest mode of one of the Workbox
@@ -137,7 +136,12 @@ const precacheRoute = new Route(({ url, sameOrigin }) => {
     ignoreMethod: true,
     ignoreVary: true,
     ignoreSearch: true,
-  }
+  },
+  plugins: [
+    new ExpirationPlugin({
+      maxEntries: 50,
+    }),
+  ]
 }));
 
 
@@ -150,7 +154,8 @@ const imageRoute = new Route(({ request, url, sameOrigin }) => {
   cacheName: IMAGE_CACHE_NAME,
   plugins: [
     new ExpirationPlugin({
-      maxAgeSeconds: SEC_3MONTH,
+      // Automatically cleanup if quota is exceeded.
+      purgeOnQuotaError: true,
     }),
     {
       handlerDidError: async () => {
@@ -181,13 +186,13 @@ const webPageRoute = new Route(({ request, url, sameOrigin }) => {
     new ExpirationPlugin({
       maxEntries: 20,
     }),
-    {
-      handlerDidError: async () => {
-        return await caches.match(FALLBACK_HTML_URL, {
-          cacheName: cacheNames.runtime,
-        }) || Response.error();
-      },
-    },
+    // {
+    //   handlerDidError: async () => {
+    //     return await caches.match(FALLBACK_HTML_URL, {
+    //       cacheName: cacheNames.runtime,
+    //     }) || Response.error();
+    //   },
+    // },
   ],
   matchOptions: {
     ignoreMethod: true,
