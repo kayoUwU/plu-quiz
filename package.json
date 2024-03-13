@@ -11,7 +11,7 @@
     "lint": "next lint",
     "sw-manifest": "node \"./internal/workbox/build-manifest.js\" \"./internal/workbox/manifest.json\" \"public/manifest.json\"",
     "sw:dev": "node \"./internal/workbox/build-sw.js\" dev",
-    "sw": "node \"./internal/workbox/build-sw.js\""
+    "sw:run": "node \"./internal/workbox/build-sw.js\" run"
   },
   "dependencies": {
     "next": "14.1.0",

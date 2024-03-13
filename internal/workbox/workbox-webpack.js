@@ -6,10 +6,10 @@ const excludePublic = ['sw.js'];
 
 module.exports = (options) => {
   const { buildId, dev } = options;
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-  console.log("process.env.NEXT_PUBLIC_BASE_PATH",process.env.NEXT_PUBLIC_BASE_PATH);
-  console.log("buildId=",buildId, "; dev=",dev);
   if (!dev) {
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    // console.log("process.env.NEXT_PUBLIC_BASE_PATH",process.env.NEXT_PUBLIC_BASE_PATH);
+    console.log("workbox-webpack buildId=",buildId);
     const swConfig = {
       dontCacheBustURLsMatching: /^\/_next\/static\/.*/i,
       include: [
@@ -38,7 +38,7 @@ module.exports = (options) => {
         //'': basePath.concat('/_next'),
         'public': basePath.concat(''),
       },
-      maximumFileSizeToCacheInBytes: 9000000,
+      maximumFileSizeToCacheInBytes: 3000000,
     };
     console.log('swConfig:',swConfig);
 

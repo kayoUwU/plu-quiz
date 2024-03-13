@@ -37,11 +37,9 @@ const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
 const ALL_CACHES = [cacheNames.precache, PAGE_CACHE_NAME, IMAGE_CACHE_NAME, STATIC_CACHE_NAME, OTHER_CACHE_NAME, cacheNames.runtime, cacheNames.googleAnalytics,]
 
-const PRECACHE_PAGES = ['/home', '/quiz', '/revision', '/about'];
-const FALLBACK_HTML_URL = '/offline';
-const FALLBACK_IMAGE_URL = '/favicon.ico';
-const PRECACHE_FALBACK = [FALLBACK_HTML_URL, FALLBACK_IMAGE_URL]; // cacheNames.runtime
-const FALBACK_STRATEGY = new CacheFirst();
+const FALLBACK_HTML_URL = '/offline'; // cache in PRECACHE_PAGES
+const FALLBACK_IMAGE_URL = '/favicon.ico'; // cache in PRECACHE_ASSETS
+const PRECACHE_PAGES = ['/index','/home', '/quiz', '/revision', '/about', '/404',FALLBACK_HTML_URL];
 
 const BASE_URL = self.registration.scope.slice(-1) === '/' ? self.registration.scope.slice(0, -1) : self.registration.scope; //"https://kayouwu.github.io/plu-quiz/"
 console.log("Service worker scope ", self.registration.scope);
@@ -51,31 +49,24 @@ console.log("Service worker scope ", self.registration.scope);
 const PRECACHE_ASSETS = self.__WB_MANIFEST || []; // e.g. {"revision":"eefb6e99af8289232aa3739e6b921d6a","url":"/favicon.ico"}
 precacheAndRoute(PRECACHE_ASSETS);
 
-console.log("PRECACHE_FALBACK", PRECACHE_FALBACK);
-// Under the hood, this strategy calls Cache.addAll in a service worker's install event.
-warmStrategyCache({ urls: PRECACHE_FALBACK, strategy: FALBACK_STRATEGY });
+// const PRECACHE_FALBACK = [FALLBACK_HTML_URL, FALLBACK_IMAGE_URL];
+// const FALBACK_STRATEGY = new CacheFirst();
+// console.log("PRECACHE_FALBACK", PRECACHE_FALBACK);
+// // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
+// warmStrategyCache({ urls: PRECACHE_FALBACK, strategy: FALBACK_STRATEGY }); // warmStrategyCache: cacheNames.runtime in dev; cacheNames.precache in prod
 
 self.addEventListener('install', (event) => {
   // succeeds parse the service worker file
   console.log('Service worker installing: ', SW_VERSION);
-  console.log("PRECACHE_PAGES", PRECACHE_PAGES);
-
-  event.waitUntil(
-    caches
-      .open(cacheNames.precache)
-      .then((cache) =>
-        cache.addAll(PRECACHE_FALBACK.map(item => BASE_URL.concat(item)))
-      )
-      .catch((err) => {
-        console.log('Service worker install: cant cache file', err);
-      })
-  )
+  const addPrecache = [];
+  PRECACHE_PAGES.forEach(item => addPrecache.push(BASE_URL.concat(item),BASE_URL.concat(item).concat('.txt')));
+  console.log("add to PAGE_CACHE_NAME:", addPrecache);
 
   event.waitUntil(
     caches
       .open(PAGE_CACHE_NAME)
       .then((cache) =>
-        cache.addAll(PRECACHE_PAGES.map(item => BASE_URL.concat(item)))
+        cache.addAll(addPrecache)
       )
       .catch((err) => {
         console.log('Service worker install: cant cache file', err);
@@ -161,14 +152,16 @@ const imageRoute = new Route(({ request, url, sameOrigin }) => {
     }),
     {
       handlerDidError: async () => {
-        return await matchPrecache(FALLBACK_IMAGE_URL) || Response.error();
+        return await caches.match(FALLBACK_IMAGE_URL, {
+          cacheName: cacheNames.precache,
+        }) || Response.error();
       },
     },
   ],
   matchOptions: {
     ignoreMethod: true,
     ignoreVary: true,
-    // ignoreSearch: true,
+    ignoreSearch: true,
   }
 }));
 
@@ -177,7 +170,8 @@ const webPageRoute = new Route(({ request, url, sameOrigin }) => {
   return sameOrigin && (request.destination === 'document' ||
     //dev: http://localhost:3000/about?_rsc=1me0c
     //prod: https://kayouwu.github.io/plu-quiz/home.txt?_rsc=re8ab (differnt Link refer to same txt with differnt search param)
-    PRECACHE_PAGES.some(item => request.url.includes(item.concat('?')) || url.pathname.includes(item.concat('.txt')))
+    PRECACHE_PAGES.some(item => url.pathname.includes(item.concat('.txt')))
+    //dev: item => request.url.includes(item.concat('?') // should put in defaultRoute
   );
 }, new StaleWhileRevalidate({
   cacheName: PAGE_CACHE_NAME,
@@ -186,16 +180,12 @@ const webPageRoute = new Route(({ request, url, sameOrigin }) => {
     new ExpirationPlugin({
       maxEntries: 20,
       maxAgeSeconds: SEC_3MONTH,
-    }),
-    // {
-    //   handlerDidError: async () => {
-    //     return await matchPrecache(FALLBACK_HTML_URL) || Response.error();
-    //   },
-    // },
+    })
   ],
   matchOptions: {
     ignoreMethod: true,
     ignoreVary: true,
+    ignoreSearch: true,
   }
 }));
 
@@ -227,12 +217,13 @@ const defaultRoute = new Route(({ request, url, sameOrigin }) => {
   networkTimeoutSeconds: networkTimeoutSeconds_NetworkFirst,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 10,
+      maxEntries: 20,
       maxAgeSeconds: SEC_30DAY,
+      purgeOnQuotaError: true,
     })
   ],
   matchOptions: {
-    ignoreSearch: true,
+    // ignoreSearch: true,
     ignoreMethod: true,
     ignoreVary: true,
   }
@@ -262,13 +253,17 @@ setCatchHandler(async ({ request, url, sameOrigin }) => {
   switch (request.destination) {
     case 'document': {
       // FALLBACK_HTML_URL must be defined as a precached URL for this to work:
-      const resp = await matchPrecache(FALLBACK_HTML_URL);
+      const resp = await caches.match(FALLBACK_HTML_URL, {
+        cacheName: PAGE_CACHE_NAME,
+      });
       return resp || Response.error();
     }
 
     case 'image': {
       // FALLBACK_IMAGE_URL must be defined as a precached URL for this to work:
-      const resp = await matchPrecache(FALLBACK_IMAGE_URL);
+      const resp = await caches.match(FALLBACK_IMAGE_URL, {
+        cacheName: cacheNames.precache,
+      });
       return resp || Response.error();
     }
 

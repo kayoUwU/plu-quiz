@@ -41,7 +41,7 @@ The page auto-updates as you edit the file.
 update pwa file in runtime
 ```bash
 yarn sw-manifest
-yarn sw:dev
+yarn sw:run
 ```
 
 
