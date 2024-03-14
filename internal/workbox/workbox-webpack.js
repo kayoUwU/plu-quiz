@@ -21,7 +21,6 @@ module.exports = (options) => {
           }
           return false;
         },
-        new RegExp('^.*\.(html|txt)$','i'),
       ],
       exclude: [/\/_buildManifest\.js$/i, /\/_ssgManifest\.js$/i],
       additionalManifestEntries: glob
