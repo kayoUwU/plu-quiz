@@ -52,7 +52,7 @@ const PRECACHE_FALBACK = [FALLBACK_HTML_URL, FALLBACK_IMAGE_URL];
 const FALBACK_STRATEGY = new CacheFirst();
 console.log("PRECACHE_FALBACK", PRECACHE_FALBACK);
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
-warmStrategyCache({ urls: PRECACHE_FALBACK, strategy: FALBACK_STRATEGY }); // warmStrategyCache: cacheNames.runtime in dev; cacheNames.precache in prod
+warmStrategyCache({ urls: PRECACHE_FALBACK.map(item=>BASE_URL.concat(item)), strategy: FALBACK_STRATEGY }); // warmStrategyCache: cacheNames.runtime in dev; cacheNames.precache in prod
 
 self.addEventListener('install', (event) => {
   // succeeds parse the service worker file

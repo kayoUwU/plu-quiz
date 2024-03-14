@@ -6,7 +6,7 @@ const excludePublic = ['sw.js'];
 
 module.exports = (options) => {
   const { buildId, dev } = options;
-  if (!dev) {
+  if (true) {
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
     // console.log("process.env.NEXT_PUBLIC_BASE_PATH",process.env.NEXT_PUBLIC_BASE_PATH);
     console.log("workbox-webpack buildId=",buildId);
@@ -14,13 +14,14 @@ module.exports = (options) => {
       dontCacheBustURLsMatching: /^\/_next\/static\/.*/i,
       include: [
         ({ asset }) => {
+          console.log("asset",asset.name);
           if (asset.name.startsWith('static/')) {
             console.log('asset.name', asset.name);
             return true;
           }
           return false;
         },
-        /^.*\.(html|txt)$/i,
+        new RegExp('^.*\.(html|txt)$',i),
       ],
       exclude: [/\/_buildManifest\.js$/i, /\/_ssgManifest\.js$/i],
       additionalManifestEntries: glob
