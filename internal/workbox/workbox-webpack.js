@@ -6,7 +6,7 @@ const excludePublic = ['sw.js'];
 
 module.exports = (options) => {
   const { buildId, dev } = options;
-  if (true) {
+  if (!dev) {
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
     // console.log("process.env.NEXT_PUBLIC_BASE_PATH",process.env.NEXT_PUBLIC_BASE_PATH);
     console.log("workbox-webpack buildId=",buildId);
@@ -21,7 +21,7 @@ module.exports = (options) => {
           }
           return false;
         },
-        new RegExp('^.*\.(html|txt)$',i),
+        new RegExp('^.*\.(html|txt)$','i'),
       ],
       exclude: [/\/_buildManifest\.js$/i, /\/_ssgManifest\.js$/i],
       additionalManifestEntries: glob
