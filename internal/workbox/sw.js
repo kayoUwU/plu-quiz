@@ -39,7 +39,7 @@ const ALL_CACHES = [cacheNames.precache, PAGE_CACHE_NAME, IMAGE_CACHE_NAME, STAT
 
 const FALLBACK_HTML_URL = '/offline'; // cache in PRECACHE_PAGES
 const FALLBACK_IMAGE_URL = '/favicon.ico'; // cache in PRECACHE_ASSETS
-const PRECACHE_PAGES = ['/index', '/home', '/quiz', '/revision', '/about', '/404',FALLBACK_HTML_URL];
+const PRECACHE_PAGES = ['/index', '/home', '/quiz', '/revision', '/about', '/404', FALLBACK_HTML_URL];
 
 const BASE_URL = self.registration.scope.slice(-1) === '/' ? self.registration.scope.slice(0, -1) : self.registration.scope; //"https://kayouwu.github.io/plu-quiz/"
 console.log("Service worker scope ", self.registration.scope);
@@ -50,8 +50,20 @@ const PRECACHE_ASSETS = self.__WB_MANIFEST || []; // e.g. {"revision":"eefb6e99a
 precacheAndRoute(PRECACHE_ASSETS);
 
 const PRECACHE_PAGES_STRATEGY = new StaleWhileRevalidate({
-  cacheName: PAGE_CACHE_NAME
+  cacheName: PAGE_CACHE_NAME,
+  networkTimeoutSeconds: networkTimeoutSeconds_StaleWhileRevalidate,
+  plugins: [
+    new ExpirationPlugin({
+      maxEntries: 20,
+    })
+  ],
+  matchOptions: {
+    ignoreMethod: true,
+    ignoreVary: true,
+    ignoreSearch: true,
+  }
 });
+
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
 warmStrategyCache({ urls: PRECACHE_PAGES.map(item => BASE_URL.concat(item)).concat(PRECACHE_PAGES.map(item => BASE_URL.concat(item).concat(".txt"))), strategy: PRECACHE_PAGES_STRATEGY }); // warmStrategyCache: cacheNames.runtime in dev; cacheNames.precache in prod
 
@@ -159,21 +171,7 @@ const webPageRoute = new Route(({ request, url, sameOrigin }) => {
     PRECACHE_PAGES.some(item => url.pathname.includes(item.concat('.txt')))
     //dev: item => request.url.includes(item.concat('?') // should put in defaultRoute
   );
-}, new StaleWhileRevalidate({
-  cacheName: PAGE_CACHE_NAME,
-  networkTimeoutSeconds: networkTimeoutSeconds_StaleWhileRevalidate,
-  plugins: [
-    new ExpirationPlugin({
-      maxEntries: 20,
-      maxAgeSeconds: SEC_3MONTH,
-    })
-  ],
-  matchOptions: {
-    ignoreMethod: true,
-    ignoreVary: true,
-    ignoreSearch: true,
-  }
-}));
+}, PRECACHE_PAGES_STRATEGY);
 
 // Handle nextjs assets:
 const staticAssetRoute = new Route(({ request, sameOrigin }) => {
