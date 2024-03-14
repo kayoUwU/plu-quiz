@@ -20,6 +20,7 @@ module.exports = (options) => {
           }
           return false;
         },
+        /^.*\.(html|txt)$/i,
       ],
       exclude: [/\/_buildManifest\.js$/i, /\/_ssgManifest\.js$/i],
       additionalManifestEntries: glob
