@@ -14,9 +14,6 @@ export default function RootApp({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <button id="install" hidden>
-        Install
-      </button>
       {children}
     </>
   );

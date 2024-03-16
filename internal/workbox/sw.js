@@ -67,12 +67,6 @@ const PRECACHE_PAGES_STRATEGY = new StaleWhileRevalidate({
 // Under the hood, this strategy calls Cache.addAll in a service worker's install event.
 warmStrategyCache({ urls: PRECACHE_PAGES.map(item => BASE_URL.concat(item)).concat(PRECACHE_PAGES.map(item => BASE_URL.concat(item).concat(".txt"))), strategy: PRECACHE_PAGES_STRATEGY }); // warmStrategyCache: cacheNames.runtime in dev; cacheNames.precache in prod
 
-self.addEventListener('install', (event) => {
-  // succeeds parse the service worker file
-  console.log('Service worker installing: ', SW_VERSION);
-  // console.log("self ",self);
-});
-
 self.addEventListener('activate', (event) => {
   // the service worker is ready to control its clients
   console.log('Service worker activated');

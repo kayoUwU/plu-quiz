@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   icons: {
     icon: WEB_ICON,
   },
-  metadataBase: new URL(SITE_BASE_URL),
-  manifest: BASE_PATH.concat("/manifest.json"),
+  // metadataBase: new URL(SITE_BASE_URL), //dont new URL('');
+  manifest: BASE_PATH.concat("/manifest.json")
 };
 
 export default function RootLayout({
