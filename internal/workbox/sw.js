@@ -19,7 +19,8 @@ const { matchPrecache, precacheAndRoute, precaching } = workbox.precaching;
 const { cacheNames, setCacheNameDetails } = workbox.core;
 
 
-const SW_VERSION = 'plu-quiz-1.0.0';
+const SW_VERSION = 'plu-quiz-1.2.0';
+const IAMGE_VERSION = 'plu-quiz-1.0.0';
 setCacheNameDetails({
   prefix: SW_VERSION,
 });
@@ -32,7 +33,7 @@ const networkTimeoutSeconds_NetworkFirst = 2;
 
 const CACHE_SUFFIX = cacheNames.suffix;
 const PAGE_CACHE_NAME = SW_VERSION.concat('_pages_');
-const IMAGE_CACHE_NAME = SW_VERSION.concat('_images');
+const IMAGE_CACHE_NAME = IAMGE_VERSION.concat('_images');
 const STATIC_CACHE_NAME = SW_VERSION.concat('_statics_');
 const OTHER_CACHE_NAME = SW_VERSION.concat('_other_');
 const ALL_CACHES = [cacheNames.precache, PAGE_CACHE_NAME, IMAGE_CACHE_NAME, STATIC_CACHE_NAME, OTHER_CACHE_NAME, cacheNames.runtime, cacheNames.googleAnalytics,]
