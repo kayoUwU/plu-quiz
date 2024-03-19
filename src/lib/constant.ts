@@ -8,9 +8,9 @@ export const WEB_ICON = BASE_PATH.concat('/favicon.ico');
 export const LOGO = BASE_PATH.concat('/icon_720.webp');
 
 export const AUTHOR = {
-  link: "https://github.com/kayoUwU",
+  link: "https://kayouwu.github.io",
   name: "Kayou",
-  icon: BASE_PATH.concat('/kayou.webp'),
+  icon: "https://kayouwu.github.io".concat('/favicon.ico'),
   projectLink: "https://github.com/kayoUwU/plu-quiz",
 };
 
