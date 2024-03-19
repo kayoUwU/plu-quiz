@@ -35,6 +35,12 @@ module.exports = (phase, { defaultConfig }) => {
                         port: process.env.REMOTE_IMAGE_port || '',
                         pathname: process.env.REMOTE_IMAGE_pathname || '',
                     },
+                    {
+                        protocol: process.env.REMOTE_IMAGE_protocol || '',
+                        hostname: process.env.REMOTE_IMAGE_hostname2 || '',
+                        port: process.env.REMOTE_IMAGE_port || '',
+                        pathname: process.env.REMOTE_IMAGE_pathname2 || '',
+                    },
                 ],
             };
         }
