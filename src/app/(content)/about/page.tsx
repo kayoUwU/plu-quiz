@@ -34,7 +34,7 @@ const AboutPage = function Page() {
           <li>React web applications with Next.js</li>
           <li>Tailwind CSS</li>
           <li>Progressive Web App with Workbox</li>
-          <li>CI/CD with github action</li>
+          <li>CI/CD with GitHub Actions</li>
           <li>Scripting with Python </li>
         </ul>
       </DescriptionBlock>

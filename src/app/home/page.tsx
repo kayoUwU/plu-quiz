@@ -57,7 +57,7 @@ function Home() {
         ))}
 
         <DescriptionButton
-          title="PLU code search"
+          title="PLU code Reference"
           description="Review PLU Code Specifications."
           renderElement={(className: string, children: JSX.Element) => (
             <a
