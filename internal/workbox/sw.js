@@ -138,7 +138,7 @@ const imageRoute = new Route(({ request, url, sameOrigin }) => {
   cacheName: IMAGE_CACHE_NAME,
   plugins: [
     new ExpirationPlugin({
-      maxEntries: 20, //plu image
+      maxEntries: 60, //plu image
       maxAgeSeconds: SEC_3MONTH,
       // Automatically cleanup if quota is exceeded.
       purgeOnQuotaError: true,
