@@ -6,7 +6,7 @@ Create Project
 nvm current
 v20.11.0
 
-npx create-next-app@latest --user-yarn
+npx create-next-app@latest --use-yarn
 ```
 
 Convert Data

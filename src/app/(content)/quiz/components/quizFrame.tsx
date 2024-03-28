@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Plu } from "@/entity/plu";
@@ -15,6 +15,29 @@ export type QuizFrameProps = {
 function QuizFrame(props: Readonly<QuizFrameProps>) {
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
   const resultDisplay = ResultStatus.display(props.currentQuestion.quizResult);
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      props.checkAnswer(currentAnswer);
+    } else if (/[0-9]/.test(e.key)) {
+      // code
+      setCurrentAnswer((item) => item.concat(e.key));
+    } else if(e.key==='Backspace') {
+      setCurrentAnswer(item=>{
+        if(item.length){
+          return item.slice(0,-1);
+        }
+        return item;
+      })
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col w-full">

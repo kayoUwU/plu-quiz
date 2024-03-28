@@ -30,6 +30,7 @@ const QuizPage = function Page() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);
   const [currentQuestion, setCurrentQuestion] = useState<Plu | null>(null);
   const [currentQuestionNo, setCurrentQuestionNo] = useState<number>(0);
+  const [isNextQuestion, setIsNextQuestion] = useState<boolean>(false);
 
   const restartQuiz = useCallback(() => {
     answeredDispatch({
@@ -47,17 +48,15 @@ const QuizPage = function Page() {
     //load questions
     if (isReset) {
       let correctNo = 0;
-      const res = answered.filter(
-        (item) => {
-          if(item.quizResult === ResultStatus.Status.IN_QUENE){
-            return true;
-          }
-          if(item.quizResult === ResultStatus.Status.CORRECT){
-            correctNo++;
-          }
-          return false;
+      const res = answered.filter((item) => {
+        if (item.quizResult === ResultStatus.Status.IN_QUENE) {
+          return true;
         }
-      );
+        if (item.quizResult === ResultStatus.Status.CORRECT) {
+          correctNo++;
+        }
+        return false;
+      });
       setQuestions(res);
       setTotalQuestionNo(answered.length);
       setCurrentQuestionNo(answered.length - res.length);
@@ -154,6 +153,32 @@ const QuizPage = function Page() {
     ),
     [answered, correctQuestionNo, onCloseAnsweredModal, totalQuestionNo]
   );
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "ArrowRight") {
+      // next question
+      setIsNextQuestion(item=>{
+        if(item === false){
+          return true;
+        } 
+        else return item;
+      });
+    }
+  };
+
+  useEffect(()=>{
+    if(isNextQuestion){
+      onNextQuestion();
+      setIsNextQuestion(false);
+    }
+  },[isNextQuestion]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
 
   const questionNoDisplay =
     questions.length === 0 && currentQuestionNo === totalQuestionNo
